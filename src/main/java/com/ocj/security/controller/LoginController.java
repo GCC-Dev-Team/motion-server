@@ -1,6 +1,7 @@
 package com.ocj.security.controller;
 
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.domain.dto.LoginRequest;
 import com.ocj.security.domain.dto.RegisterRequest;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.service.LoginService;
@@ -22,8 +23,9 @@ public class LoginController {
     UserService userService;
 
     @PostMapping("/login")
-    public ResponseResult login(@RequestBody User user){
-        return loginService.login(user);
+    public ResponseResult login(@RequestBody LoginRequest loginRequest){
+
+        return loginService.login(loginRequest);
     }
 
     @PostMapping("/register")

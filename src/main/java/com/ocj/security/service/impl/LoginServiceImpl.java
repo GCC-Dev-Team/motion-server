@@ -2,6 +2,7 @@ package com.ocj.security.service.impl;
 
 
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.domain.dto.LoginRequest;
 import com.ocj.security.domain.entity.LoginUser;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.UserInfoVO;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 
@@ -28,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
     private RedisCache redisCache;
 
     @Override
-    public ResponseResult login(User user) {    //这个user为前端待验证的user
+    public ResponseResult login(LoginRequest user) {    //这个user为前端待验证的user
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
 
