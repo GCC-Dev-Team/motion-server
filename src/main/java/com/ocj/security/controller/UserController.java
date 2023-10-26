@@ -10,17 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
-@RestController
-@RequestMapping("/user")
+//@RestController
+//@RequestMapping("/user")
 public class UserController {
-    @Resource
-    UserService userService;
 
-    @PostMapping("/register")
-    ResponseResult register(@RequestBody RegisterRequest registerRequest){
-
-
-        return userService.register(registerRequest);
-    }
 
 }
