@@ -9,6 +9,7 @@ import com.ocj.security.service.UserService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.CheckStringUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,7 +52,8 @@ public class UserServiceImpl implements UserService {
         user.setId(UUID.randomUUID().getMostSignificantBits());
 
         BeanUtils.copyProperties(registerRequest,user);
-//        user.setPassword();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(bCryptPasswordEncoder.encode(registerRequest.getPassword()));
 
         userMapper.insert(user);
 

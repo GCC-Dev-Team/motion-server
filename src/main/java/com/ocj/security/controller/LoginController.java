@@ -13,19 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/User")
+@RequestMapping("/Account")
 public class LoginController {
 
     @Resource
     private LoginService loginService;
+    @Resource
+    UserService userService;
 
     @PostMapping("/login")
     public ResponseResult login(@RequestBody User user){
         return loginService.login(user);
     }
-
-    @Resource
-    UserService userService;
 
     @PostMapping("/register")
     ResponseResult register(@RequestBody RegisterRequest registerRequest){
