@@ -11,7 +11,7 @@ import java.util.Date;
 
 
 /**
- * 用户表(User)实体类
+ * 用户表(UserService)实体类
  *
  * @author 三更
  */
