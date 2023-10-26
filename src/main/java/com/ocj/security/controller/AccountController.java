@@ -3,7 +3,6 @@ package com.ocj.security.controller;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.LoginRequest;
 import com.ocj.security.domain.dto.RegisterRequest;
-import com.ocj.security.domain.entity.User;
 import com.ocj.security.service.LoginService;
 import com.ocj.security.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +14,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/Account")
-public class LoginController {
+public class AccountController {
 
     @Resource
     private LoginService loginService;
@@ -34,5 +33,7 @@ public class LoginController {
 
         return userService.register(registerRequest);
     }
+
+
 
 }
