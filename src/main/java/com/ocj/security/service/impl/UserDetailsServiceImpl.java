@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
         //查询用户信息
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getUserName,username);
+        queryWrapper.eq(User::getEmail,username);
         User user = userMapper.selectOne(queryWrapper);
         //如果没有查询到用户,就抛出异常,,会被捕获?
         if (Objects.isNull(user)){

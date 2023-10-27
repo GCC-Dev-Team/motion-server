@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
 
     /**
-     * 用户名
+     * 邮箱
      */
 
-    private String userName;
+    private String email;
 
     /**
      * 密码

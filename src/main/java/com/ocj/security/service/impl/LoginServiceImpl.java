@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ResponseResult login(LoginRequest user) {    //这个user为前端待验证的user
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword());
 
         /*
             这里最终会调用UserDetailsService实现类中的方法:loadUserByUsername(String username),
