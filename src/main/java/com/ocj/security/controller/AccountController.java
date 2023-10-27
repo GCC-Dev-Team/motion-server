@@ -32,7 +32,6 @@ public class AccountController {
     @PostMapping("/register")
     ResponseResult register(@RequestBody RegisterRequest registerRequest){
 
-
         return userService.register(registerRequest);
     }
 
@@ -42,11 +41,11 @@ public class AccountController {
         return loginService.logout();
     }
 
-    @PostMapping("/hello")
-    //@PreAuthorize("hasAuthority('test')")
-    public String sayHello(){
-
-        return "hello*** world";
-    }
+//    @PostMapping("/hello")
+//    //@PreAuthorize("hasAuthority('test')")
+//    public String sayHello(){
+//
+//        return "hello*** world";
+//    }
 
 }

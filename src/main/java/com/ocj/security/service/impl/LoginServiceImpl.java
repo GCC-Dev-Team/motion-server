@@ -49,7 +49,7 @@ public class LoginServiceImpl implements LoginService {
 
         //获取userid生成token
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId().toString();
+        String userId = loginUser.getUser().getId();
         String jwt = JwtUtil.createJWT(userId);
         //把用户信息存入redis
         redisCache.setCacheObject("login:" + userId,loginUser);
@@ -69,7 +69,7 @@ public class LoginServiceImpl implements LoginService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         //获取userId
-        Long userId = loginUser.getUser().getId();
+        String userId = loginUser.getUser().getId();
         //删除redis中的用户信息
         redisCache.deleteObject("login:" + userId);
         return ResponseResult.okResult();

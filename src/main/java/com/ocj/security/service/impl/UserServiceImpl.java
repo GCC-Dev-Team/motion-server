@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseResult register(RegisterRequest registerRequest) {
         //情况一：用户名有重复
-        QueryWrapper<User> userQueryWrapper = new QueryWrapper<User>();
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("user_name",registerRequest.getUserName());
         User sqlUser = userMapper.selectOne(userQueryWrapper);
         if (sqlUser!=null){
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
         //情况二：邮箱重复
 
-        QueryWrapper<User> userQueryWrapperTwo = new QueryWrapper<User>();
+        QueryWrapper<User> userQueryWrapperTwo = new QueryWrapper<>();
         userQueryWrapperTwo.eq("email",registerRequest.getEmail());
         User sqlUserTwo = userMapper.selectOne(userQueryWrapperTwo);
         if (sqlUserTwo!=null){
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
         //添加到数据库
         User user = new User();
-        user.setId(UUID.randomUUID().getMostSignificantBits());
+        user.setId(UUID.randomUUID().toString());
 
         BeanUtils.copyProperties(registerRequest,user);
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
