@@ -15,11 +15,11 @@ public class CommentVO {
     //评论id
     private String id;
     //视频id
-    private String videoId;
+    /*private String videoId;*/
     //评论内容
     private String content;
     //评论发起人id
-    private String commentBy;
+    private String userId;
     //评论者用户名
     private String userName;
 

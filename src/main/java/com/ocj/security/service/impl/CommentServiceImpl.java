@@ -39,7 +39,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .id(RandomUtil.generateRandomNumberString())
                 .content(content)
                 .videoId(videoId)
-                .commentBy(SecurityUtils.getUserId())
+                .userId(SecurityUtils.getUserId())
                 .likes(0L)
                 .createAt(getCurrentTimeAsString())
                 .updateAt(getCurrentTimeAsString())
@@ -61,7 +61,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         //对评论的 头像 和 用户名 赋值
         for (CommentVO commentVO :commentVOList){
-            User user = userMapper.selectById(commentVO.getCommentBy());
+            User user = userMapper.selectById(commentVO.getUserId());
             commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
         }

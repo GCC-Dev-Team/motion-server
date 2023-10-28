@@ -30,7 +30,7 @@ public class Comment  {
     //评论内容
     private String content;
     //评论发起人id
-    private String commentBy;
+    private String userId;
     //点赞数
     private Long likes;
 
