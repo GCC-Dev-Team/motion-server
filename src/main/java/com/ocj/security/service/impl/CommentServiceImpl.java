@@ -59,9 +59,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
 
-        //对评论的头像赋值
+        //对评论的 头像 和 用户名 赋值
         for (CommentVO commentVO :commentVOList){
             User user = userMapper.selectById(commentVO.getCommentBy());
+            commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
         }
 

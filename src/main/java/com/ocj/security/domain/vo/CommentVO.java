@@ -20,6 +20,9 @@ public class CommentVO {
     private String content;
     //评论发起人id
     private String commentBy;
+    //评论者用户名
+    private String userName;
+
     //点赞数
     private Long likes;
 
