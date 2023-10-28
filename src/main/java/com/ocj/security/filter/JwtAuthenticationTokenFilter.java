@@ -1,6 +1,7 @@
 package com.ocj.security.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.ocj.security.anno.NoNeedLogin;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.LoginUser;
 import com.ocj.security.enums.AppHttpCodeEnum;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
