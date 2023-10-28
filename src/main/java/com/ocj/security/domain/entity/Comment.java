@@ -21,18 +21,18 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("comment")
 public class Comment  {
     @TableId
-    private Long id;
+    private String id;
 
     //视频id
-    private Long videoId;
+    private String videoId;
     //根评论id
-    private Long rootId;
+    private String rootId;
     //评论内容
     private String content;
     //所回复的目标评论的用户id
     private String toCommentUserId;
     //回复目标评论id
-    private Long toCommentId;
+    private String toCommentId;
     //评论发起人id
     private String createBy;
 
@@ -43,8 +43,6 @@ public class Comment  {
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
-
-
 
 }
 

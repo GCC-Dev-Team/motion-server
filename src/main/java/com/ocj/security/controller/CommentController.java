@@ -12,6 +12,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 评论表(Comment)表控制层
  *
@@ -29,12 +32,19 @@ public class CommentController{
     public ResponseResult addComment(@RequestBody AddCommentRequest addCommentRequest){
         Comment comment = BeanCopyUtils.copyBean(addCommentRequest, Comment.class);
         commentService.addComment(comment);
-
-
         return ResponseResult.okResult();
     }
 
+    @GetMapping("/getCommentList")
+    public ResponseResult<List<CommentVO>> getComment(){
 
+        List<CommentVO> commentVOList = new ArrayList<>();
+
+        commentVOList = commentService.getCommentList();
+
+        return ResponseResult.okResult(commentVOList);
+
+    }
 
 
 }

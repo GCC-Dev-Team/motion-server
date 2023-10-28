@@ -3,6 +3,9 @@ package com.ocj.security.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.entity.Comment;
+import com.ocj.security.domain.vo.CommentVO;
+
+import java.util.List;
 
 
 /**
@@ -14,5 +17,7 @@ import com.ocj.security.domain.entity.Comment;
 public interface CommentService extends IService<Comment> {
 
     void addComment(Comment comment);
+
+    List<CommentVO> getCommentList();
 }
 
