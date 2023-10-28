@@ -2,82 +2,71 @@ package com.ocj.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ocj.security.commom.ResponseResult;
-import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.entity.Comment;
+import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.CommentVO;
-import com.ocj.security.enums.AppHttpCodeEnum;
-import com.ocj.security.exception.SystemException;
 import com.ocj.security.mapper.CommentMapper;
-import com.ocj.security.utils.BeanCopyUtils;
-import org.springframework.stereotype.Service;
+import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
-import org.springframework.util.StringUtils;
+import com.ocj.security.utils.BeanCopyUtils;
+import com.ocj.security.utils.RandomUtil;
+import com.ocj.security.utils.SecurityUtils;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-import static com.ocj.security.utils.RandomUtil.generateRandomNumberString;
-import static com.ocj.security.utils.RandomUtil.generateRandomString;
-import static com.ocj.security.utils.SecurityUtils.getLoginUser;
+import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
+
 
 /**
  * 评论表(Comment)表服务实现类
  *
  * @author makejava
- * @since 2023-10-28 01:43:21
+ * @since 2023-10-28 18:36:31
  */
-//@Service("commentService")
-    @Service
+@Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    @Resource
+    private UserMapper userMapper;
     @Override
-    public void addComment(Comment comment) {
-        //评论不能为空
-        if (!StringUtils.hasText(comment.getContent())){
-            throw new SystemException(AppHttpCodeEnum.CONTEXT_NOT_NULL);
-        }
+    public void addComment(String videoId,String content) {
 
-        comment.setCreateBy(getLoginUser().getUser().getId());
-        comment.setId(generateRandomNumberString());
-        //TODO 设置MP字段填充
+        Comment comment = Comment.builder()
+                .id(RandomUtil.generateRandomNumberString())
+                .content(content)
+                .videoId(videoId)
+                .commentBy(SecurityUtils.getUserId())
+                .likes(0L)
+                .createAt(getCurrentTimeAsString())
+                .updateAt(getCurrentTimeAsString())
+                .build();
+
         save(comment);
 
     }
 
     @Override
-    public List<CommentVO> getCommentList() {
-
-        //查找根评论rootId==-1
+    public List<CommentVO> getCommentList(String videoId) {
+        //查询条件,获取该视频video下的评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getRootId,"-1");
+        queryWrapper.eq(Comment::getVideoId,videoId);
+        queryWrapper.eq(Comment::getDelFlag,0);
         List<Comment> commentList = list(queryWrapper);
 
-        //根评论集合
-        List<CommentVO> commentRootList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
+        List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
 
-        //对每一个根评论查找子评论
-        commentRootList.stream()
-                //传入根评论自己的id
-                .forEach(CommentVO -> {
-                    CommentVO.setChildren(getChildren(CommentVO.getId()));
-                      //TODO 设置评论时间
-                }
-                );
+        //对评论的头像赋值
+        for (CommentVO commentVO :commentVOList){
+            User user = userMapper.selectById(commentVO.getCommentBy());
+            commentVO.setAvatar(user.getAvatar());
+        }
 
-
-        return commentRootList;
-    }
-
-    public List<CommentVO> getChildren(String id){
-        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        //根据根评论的id,查找对应子评论的
-        queryWrapper.eq(Comment::getRootId,id);
-        List<Comment> commentChildrenList = list(queryWrapper);
-        //转为VO
-        List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentChildrenList, CommentVO.class);
-        //返回该根评论对应的子评论集合
         return commentVOList;
+
     }
 
 

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,12 +13,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * 评论表(Comment)表实体类
  *
  * @author makejava
- * @since 2023-10-28 01:43:21
+ * @since 2023-10-28 18:36:31
  */
 @SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @TableName("comment")
 public class Comment  {
     @TableId
@@ -25,24 +27,20 @@ public class Comment  {
 
     //视频id
     private String videoId;
-    //根评论id
-    private String rootId;
     //评论内容
     private String content;
-    //所回复的目标评论的用户id
-    private String toCommentUserId;
-    //回复目标评论id
-    private String toCommentId;
     //评论发起人id
-    private String createBy;
+    private String commentBy;
+    //点赞数
+    private Long likes;
 
-    private Date createTime;
+    private String createAt;
 
-    private Long updateBy;
-
-    private Date updateTime;
+    private String updateAt;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
+
+
 
 }
 

@@ -12,15 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class AddCommentRequest {
 
-    //视频id
-    private String videoId;
-    //根评论id
-    private String rootId;
     //评论内容
     private String content;
-    //所回复的目标评论的用户id
-    private String toCommentUserId;
-    //回复目标评论id
-    private String toCommentId;
 
 }
