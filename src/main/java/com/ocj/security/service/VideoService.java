@@ -1,7 +1,9 @@
 package com.ocj.security.service;
 
+import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
 * @author L
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface VideoService extends IService<Video> {
 
     //上传视频
+    ResponseResult addVideo(MultipartFile file);
 
 
     //获取视频列表

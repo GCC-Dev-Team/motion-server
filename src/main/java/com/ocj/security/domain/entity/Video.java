@@ -45,7 +45,7 @@ public class Video implements Serializable {
     private String tags;
 
     /**
-     * 
+     * 1是发布，2是私有，0是删除
      */
     @TableField(value = "status")
     private Integer status;
