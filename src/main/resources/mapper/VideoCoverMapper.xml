@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ocj.security.mapper.VideoCoverMapper">
+
+    <resultMap id="BaseResultMap" type="com.ocj.security.domain.entity.VideoCover">
+            <id property="videoId" column="video_id" jdbcType="VARCHAR"/>
+            <result property="videoCoverUrl" column="video_cover_url" jdbcType="VARCHAR"/>
+            <result property="width" column="width" jdbcType="INTEGER"/>
+            <result property="length" column="length" jdbcType="INTEGER"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        video_id,video_cover_url,width,
+        length,created_at,updated_at
+    </sql>
+</mapper>
