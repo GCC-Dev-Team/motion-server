@@ -1,8 +1,5 @@
 package com.ocj.security.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.ocj.security.domain.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,16 +13,16 @@ public class VideoDataVO {
     /**
      * 类型
      */
-    private VideoCategoryVO videoCategoryVO;
+    private CategoryVO category;
 
     /**
      *用户信息
      */
-    private VideoUserVO videoUserVO;
+    private UserVO user;
     /**
      * 视频的封面信息
      */
-    private VideoCoverVO videoCoverVO;
+    private CoverVO cover;
 
     /**
      * 视频的评论条数(视频表没有的)
@@ -66,12 +63,12 @@ public class VideoDataVO {
      * 创建时间
      */
 
-    private Date createTime;
+    private Date createAt;
 
     /**
      *更新时间
      */
 
-    private Date updateTime;
+    private Date updateAt;
 
 }

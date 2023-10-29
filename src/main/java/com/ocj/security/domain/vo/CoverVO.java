@@ -7,14 +7,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoUserVO {
+public class CoverVO {
     /**
-     * 用户id
+     * 视频封面的地址
      */
-    private String userId;
+    private String videoCoverUrl;
 
     /**
-     * 用户名
+     *width是宽度
      */
-    private String userName;
+    private Integer width;
+
+    /**
+     *封面的长度
+     */
+    private Integer length;
 }

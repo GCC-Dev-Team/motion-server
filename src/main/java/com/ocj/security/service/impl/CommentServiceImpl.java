@@ -82,6 +82,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
+    public void addLikesCount(String videoId, String CommentId) {
+
+    }
+
+    @Override
     public void addLikesCount(String commentId) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getId,commentId);

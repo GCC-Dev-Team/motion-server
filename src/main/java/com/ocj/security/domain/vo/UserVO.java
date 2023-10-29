@@ -1,6 +1,5 @@
 package com.ocj.security.domain.vo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoCategoryVO {
+public class UserVO {
     /**
-     *
+     * 用户id
      */
-    private String categoryId;
+    private String userId;
 
     /**
-     *
+     * 用户名
      */
-    private String categoryName;
+    private String userName;
 }
