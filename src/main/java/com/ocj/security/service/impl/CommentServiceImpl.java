@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.CommentVO;
+import com.ocj.security.exception.SystemException;
 import com.ocj.security.mapper.CommentMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
@@ -15,10 +16,12 @@ import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RedisCache;
 import com.ocj.security.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.ocj.security.enums.AppHttpCodeEnum.CONTEXT_NOT_NULL;
 import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 
 
@@ -37,7 +40,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserMapper userMapper;
     @Override
     public void addComment(String videoId,String content) {
-
+        if (!StringUtils.hasText(content)){ //如果评论内容为空
+            throw new SystemException(CONTEXT_NOT_NULL);
+        }
         Comment comment = Comment.builder()
                 .id(RandomUtil.generateRandomNumberString())
                 .content(content)
@@ -77,11 +82,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public void addLikesCount(String videoId, String CommentId) {
-        String likes =  redisCache.getCacheObject(CommentId+"likes:");
-
+    public void addLikesCount(String commentId) {
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getId,commentId);
+        Comment comment = getOne(queryWrapper);
+        Long likes = comment.getLikes();
+        comment.setLikes(  ++likes  );
+        updateById(comment);
+        /*String likes =  redisCache.getCacheObject(commentId+"likes:");
         Long likesLong;
-
         //如果该评论点赞前的点赞数likes==0
         if (likes==null){
             likes = "1";
@@ -90,17 +99,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             likesLong = Long.parseLong(likes);
             likes = (++likesLong).toString();
         }
-
         //查出要修改的评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getId,CommentId);
+        queryWrapper.eq(Comment::getId,commentId);
         //修改后的评论的点赞数,保存到数据库中
         Comment comment = getOne(queryWrapper);
         comment.setLikes(Long.valueOf(likes));
         updateById(comment);
-
+        String videoId = comment.getVideoId();
         //删除该视频的评论缓存
-        redisCache.deleteObject("commentVideo::"+videoId);
+        redisCache.deleteObject("commentVideo::"+videoId);*/
     }
 
     public int getCommentCount(String videoId){

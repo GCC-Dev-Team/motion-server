@@ -47,10 +47,9 @@ public class VideoController {
         return ResponseResult.okResult(commentVOList);
     }
 
-    @PutMapping("/{videoId}/{CommentId}/like")
-    public ResponseResult addLikesCountTest(@PathVariable String videoId,@PathVariable String CommentId){
-
-        commentService.addLikesCount(videoId,CommentId);
+    @PostMapping ("/comment/{commentId}/like")
+    public ResponseResult addLikesCount(@PathVariable String commentId){
+        commentService.addLikesCount(commentId);
         return ResponseResult.okResult();
     }
 
