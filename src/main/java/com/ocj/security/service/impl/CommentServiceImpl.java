@@ -50,6 +50,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         save(comment);
 
+        redisCache.deleteObject("commentVideo::"+videoId);
+
     }
 
     @Override
@@ -78,14 +80,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public void addLikesCount(String videoId, String id) {
         String likes =  redisCache.getCacheObject(id+"likes:");
 
+        Long likesLong;
+
         //如果该评论点赞前的点赞数likes==0
         if (likes==null){
-            likes = "0";
+            likesLong = 1L;
         }else {
             //如果点赞前的likes!=0
-            Long likesLong = Long.parseLong(likes);
-            likesLong += likesLong;
-            likes = likesLong.toString();
+            likesLong = Long.parseLong(likes);
+            likes = (++likesLong).toString();
         }
 
         //将点赞数更新到redis中
