@@ -8,6 +8,9 @@ import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.utils.BeanCopyUtils;
+import com.ocj.security.utils.RedisCache;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/video")
+@Slf4j
 public class VideoController {
     @Resource
     VideoService videoService;
@@ -37,9 +41,17 @@ public class VideoController {
     }
 
     @GetMapping("/{videoId}/comment")
+    @Cacheable(cacheNames = "commentVideo",key = "#videoId")
     public ResponseResult<List<CommentVO>> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList =  commentService.getCommentList(videoId);
         return ResponseResult.okResult(commentVOList);
+    }
+
+    @PutMapping("/{videoId}/{id}")
+    public ResponseResult addLikesCountTest(@PathVariable String videoId,@PathVariable String id){
+
+        commentService.addLikesCount(videoId,id);
+        return ResponseResult.okResult();
     }
 
 

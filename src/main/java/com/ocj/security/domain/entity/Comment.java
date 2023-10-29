@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @Builder
 @TableName("comment")
-public class Comment  {
+public class Comment  implements Serializable{
     @TableId
     private String id;
 

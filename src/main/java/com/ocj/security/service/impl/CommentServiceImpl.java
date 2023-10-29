@@ -12,6 +12,7 @@ import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.RandomUtil;
+import com.ocj.security.utils.RedisCache;
 import com.ocj.security.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
+    @Resource
+    private RedisCache redisCache;
     @Resource
     private UserMapper userMapper;
     @Override
@@ -65,8 +68,30 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
         }
+        redisCache.setCacheList("commentVideo::"+videoId,commentVOList);
+
 
         return commentVOList;
+    }
+
+    @Override
+    public void addLikesCount(String videoId, String id) {
+        String likes =  redisCache.getCacheObject(id+"likes:");
+
+        //如果该评论点赞前的点赞数likes==0
+        if (likes==null){
+            likes = "0";
+        }else {
+            //如果点赞前的likes!=0
+            Long likesLong = Long.parseLong(likes);
+            likesLong += likesLong;
+            likes = likesLong.toString();
+        }
+
+        //将点赞数更新到redis中
+        //这里的id -> 评论的id
+        redisCache.setCacheObject(id+"likes:",likes);
+
 
     }
 
