@@ -4,6 +4,7 @@ import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.vo.CommentVO;
+import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
@@ -29,7 +30,27 @@ public class VideoController {
     @PostMapping("/addVideo")
     public ResponseResult addVideo(MultipartFile file){
 
-        return videoService.addVideo(file);
+        return null;
+    }
+
+    /**
+     * 获取视频列表
+     * @return
+     */
+    @GetMapping("/list")
+    public ResponseResult getVideoList(){
+        return ResponseResult.okResult(videoService.getVideoList());
+    }
+
+    /**
+     * 获取每个视频详细信息
+     * @param videoId
+     * @return
+     */
+    @GetMapping("/one")
+    public ResponseResult getVideoById(String videoId){
+
+        return ResponseResult.okResult(videoService.getVideoDataById(videoId));
     }
 
     @Resource

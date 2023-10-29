@@ -2,6 +2,9 @@ package com.ocj.security.mapper;
 
 import com.ocj.security.domain.entity.Video;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author L
@@ -10,6 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.ocj.security.domain.entity.Video
 */
 public interface VideoMapper extends BaseMapper<Video> {
+
+    @Select("SELECT video_id FROM video ORDER BY RAND() LIMIT 10")
+    List<String> randVideoList();
 
 }
 

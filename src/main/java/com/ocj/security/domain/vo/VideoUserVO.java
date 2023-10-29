@@ -8,7 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoUserVO {
+    /**
+     * 用户id
+     */
     private String userId;
 
-//    private String
+    /**
+     * 用户名
+     */
+    private String userName;
 }

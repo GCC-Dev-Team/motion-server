@@ -3,7 +3,10 @@ package com.ocj.security.service;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ocj.security.domain.vo.VideoDataVO;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
 * @author L
@@ -16,9 +19,14 @@ public interface VideoService extends IService<Video> {
     ResponseResult addVideo(MultipartFile file);
 
 
-    //获取视频列表
+
+//    获取视频列表
+    List<VideoDataVO> getVideoList();
+
+    ////获取视频详细信息(给前端的)（根据videoId，返回DataVO）
+    VideoDataVO getVideoDataById(String videoId);
 
 
-    //获取视频详细信息
+
 
 }

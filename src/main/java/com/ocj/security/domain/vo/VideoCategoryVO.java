@@ -1,6 +1,6 @@
 package com.ocj.security.domain.vo;
 
-import com.ocj.security.domain.entity.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoData {
+public class VideoCategoryVO {
     /**
-     * 类型
+     *
      */
-    private Category category;
+    private String categoryId;
 
     /**
      *
      */
-
+    private String categoryName;
 }
