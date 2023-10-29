@@ -77,27 +77,36 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public void addLikesCount(String videoId, String id) {
-        String likes =  redisCache.getCacheObject(id+"likes:");
+    public void addLikesCount(String videoId, String CommentId) {
+        String likes =  redisCache.getCacheObject(CommentId+"likes:");
 
         Long likesLong;
 
         //如果该评论点赞前的点赞数likes==0
         if (likes==null){
-            likesLong = 1L;
+            likes = "1";
         }else {
             //如果点赞前的likes!=0
             likesLong = Long.parseLong(likes);
             likes = (++likesLong).toString();
         }
 
-        //将点赞数更新到redis中
-        //这里的id -> 评论的id
-        redisCache.setCacheObject(id+"likes:",likes);
+        //查出要修改的评论
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getId,CommentId);
+        //修改后的评论的点赞数,保存到数据库中
+        Comment comment = getOne(queryWrapper);
+        comment.setLikes(Long.valueOf(likes));
+        updateById(comment);
 
-
+        //删除该视频的评论缓存
+        redisCache.deleteObject("commentVideo::"+videoId);
     }
 
+    public int getCommentCount(String videoId){
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getVideoId,videoId);
+        return count(queryWrapper);
+    }
 
 }
-

@@ -47,10 +47,10 @@ public class VideoController {
         return ResponseResult.okResult(commentVOList);
     }
 
-    @PutMapping("/{videoId}/{id}")
-    public ResponseResult addLikesCountTest(@PathVariable String videoId,@PathVariable String id){
+    @PutMapping("/{videoId}/{CommentId}/like")
+    public ResponseResult addLikesCountTest(@PathVariable String videoId,@PathVariable String CommentId){
 
-        commentService.addLikesCount(videoId,id);
+        commentService.addLikesCount(videoId,CommentId);
         return ResponseResult.okResult();
     }
 
