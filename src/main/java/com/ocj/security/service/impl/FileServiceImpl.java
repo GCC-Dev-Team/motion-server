@@ -11,16 +11,19 @@ import com.qiniu.storage.DownloadUrl;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.storage.model.UploadPolicy;
 import com.qiniu.util.Auth;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 
 @Service
 public class FileServiceImpl implements FileService {
+
 
     /**
      * 上传文件的接口
@@ -39,6 +42,7 @@ public class FileServiceImpl implements FileService {
             Configuration cfg = new Configuration(Region.region2());
             cfg.resumableUploadAPIVersion = Configuration.ResumableUploadAPIVersion.V2;// 指定分片上传版本
 
+
             UploadManager uploadManager = new UploadManager(cfg);
 //...生成上传凭证，然后准备上传
             String accessKey = "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT";
@@ -47,6 +51,7 @@ public class FileServiceImpl implements FileService {
 
             Auth auth = Auth.create(accessKey, secretKey);
             String upToken = auth.uploadToken(bucket);
+
             Response response = uploadManager.put(bytes, fileAddress+"." +FileUtil.getFileExtension(file), upToken);
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
