@@ -61,7 +61,7 @@ public class VideoController {
         return ResponseResult.okResult();
     }
 
-    @GetMapping("/{videoId}/comment")
+    @GetMapping("/{videoId}/commentList")
     @Cacheable(cacheNames = "commentVideo",key = "#videoId")
     public ResponseResult<List<CommentVO>> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList =  commentService.getCommentList(videoId);

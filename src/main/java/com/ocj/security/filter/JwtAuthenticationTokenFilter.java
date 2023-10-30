@@ -42,6 +42,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if (!StringUtils.hasText(token)){
             //说明改接口不需要登录,直接放行
             filterChain.doFilter(request,response);
+
+
             return;
         }
         //表示需要登录的

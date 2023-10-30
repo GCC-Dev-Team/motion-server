@@ -1,19 +1,14 @@
 package com.ocj.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.domain.entity.Comment;
-import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.exception.SystemException;
 import com.ocj.security.mapper.CommentMapper;
-import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
-import com.ocj.security.service.LikeCommentVideoService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RedisCache;
