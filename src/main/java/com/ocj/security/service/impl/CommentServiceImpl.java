@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.domain.entity.Comment;
+import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.exception.SystemException;
 import com.ocj.security.mapper.CommentMapper;
+import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
+import com.ocj.security.service.LikeCommentVideoService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RedisCache;
@@ -66,7 +69,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         queryWrapper.eq(Comment::getVideoId,videoId);
         queryWrapper.eq(Comment::getDelFlag,0);
         List<Comment> commentList = list(queryWrapper);
-
         List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
 
         //对评论的 头像 和 用户名 赋值
@@ -80,6 +82,40 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         return commentVOList;
     }
+
+    /*@Override
+    public List<CommentVO> getCommentList(String videoId) {
+        //查询条件,获取该视频video下的评论
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getVideoId,videoId);
+        queryWrapper.eq(Comment::getDelFlag,0);
+        List<Comment> commentList = list(queryWrapper);
+        List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
+
+        LambdaQueryWrapper<LikeCommentVideo> queryLike = new LambdaQueryWrapper<>();
+        //根据userId查出该用户所有点赞的评论
+        queryLike.eq(LikeCommentVideo::getUserId,SecurityUtils.getUserId());
+        //queryLike.eq(LikeCommentVideo::getIsLiked,videoId);
+
+        //查询该用户的所有点赞集合
+        List<LikeCommentVideo> likeCommentVideos = likeCommentVideoMapper.selectList(queryLike);
+
+        for (CommentVO commentVO :commentVOList){
+            //对评论的 头像 和 用户名 赋值
+            User user = userMapper.selectById(commentVO.getUserId());
+            commentVO.setUserName(user.getUserName());
+            commentVO.setAvatar(user.getAvatar());
+            //在该视频的videoId评论下,在用户已点赞的评论下,设置对应用户的是否点赞情况
+            if (likeCommentVideos.contains(commentVO.getId())){
+                commentVO.setIsLiked(true);
+            }else {
+                commentVO.setIsLiked(false);
+            }
+        }
+
+        redisCache.setCacheList("commentVideo::"+videoId,commentVOList);
+        return commentVOList;
+    }*/
 
     @Override
     public void addLikesCount(String videoId, String CommentId) {
