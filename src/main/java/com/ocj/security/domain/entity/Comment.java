@@ -1,7 +1,5 @@
 package com.ocj.security.domain.entity;
 
-import java.util.Date;
-
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +30,7 @@ public class Comment  implements Serializable{
     //评论发起人id
     private String userId;
     //点赞数
-    private Long likes;
+    private Long likeCount;
 
     private String createAt;
 

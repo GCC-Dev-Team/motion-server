@@ -1,12 +1,10 @@
 package com.ocj.security.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +23,7 @@ public class CommentVO implements Serializable {
     private String userName;
 
     //点赞数
-    private Long likes;
+    private Long likeCount;
 
     //头像
     private String avatar;

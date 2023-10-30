@@ -46,7 +46,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .content(content)
                 .videoId(videoId)
                 .userId(SecurityUtils.getUserId())
-                .likes(0L)
+                .likeCount(0L)
                 .createAt(getCurrentTimeAsString())
                 .updateAt(getCurrentTimeAsString())
                 .build();
@@ -122,8 +122,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getId,commentId);
         Comment comment = getOne(queryWrapper);
-        Long likes = comment.getLikes();
-        comment.setLikes(  ++likes  );
+        Long likes = comment.getLikeCount();
+        comment.setLikeCount(  ++likes  );
         updateById(comment);
         /*String likes =  redisCache.getCacheObject(commentId+"likes:");
         Long likesLong;
