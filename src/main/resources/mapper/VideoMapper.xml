@@ -5,23 +5,25 @@
 <mapper namespace="com.ocj.security.mapper.VideoMapper">
 
     <resultMap id="BaseResultMap" type="com.ocj.security.domain.entity.Video">
-            <id property="videoId" column="video_id" jdbcType="VARCHAR"/>
-            <result property="url" column="url" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
-            <result property="tags" column="tags" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="likeCount" column="like_count" jdbcType="BIGINT"/>
-            <result property="views" column="views" jdbcType="BIGINT"/>
-            <result property="publisher" column="publisher" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="videoId" column="video_id" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="likeCount" column="like_count" jdbcType="BIGINT"/>
+        <result property="views" column="views" jdbcType="BIGINT"/>
+        <result property="publisher" column="publisher" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        video_id,url,description,
+        video_id
+        ,url,description,
         category_id,tags,status,
         like_count,views,publisher,
-        create_time,update_time
+        create_time,update_time,address
     </sql>
 </mapper>

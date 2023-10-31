@@ -50,6 +50,9 @@ public class VideoCover implements Serializable {
     @TableField(value = "updated_at")
     private Date updatedAt;
 
+    @TableField(value = "cover_address")
+    private String coverAddress;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 

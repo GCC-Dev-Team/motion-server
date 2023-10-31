@@ -21,5 +21,5 @@ public class CoverVO {
     /**
      *封面的长度
      */
-    private Integer length;
+    private Integer height;
 }

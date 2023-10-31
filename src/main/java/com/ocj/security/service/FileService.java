@@ -14,4 +14,13 @@ public interface FileService {
     String uploadFile(MultipartFile file,String fileAddress);
 
     String preview(String fileAddress);
+
+    /**
+     * 对文件的操作
+     * @param fileAddress 需要的是上传的key
+     * @param persistentOpf 操作指令
+     * @return
+     */
+
+    Boolean processFile(String fileAddress,String persistentOpf,String saveAddress);
 }

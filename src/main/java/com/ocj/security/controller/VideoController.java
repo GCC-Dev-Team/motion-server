@@ -2,6 +2,7 @@ package com.ocj.security.controller;
 
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
+import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.domain.vo.VideoDataVO;
@@ -38,8 +39,8 @@ public class VideoController {
      * @return
      */
     @GetMapping("/list")
-    public ResponseResult getVideoList(){
-        return ResponseResult.okResult(videoService.getVideoList());
+    public ResponseResult getVideoList(@RequestBody PageRequest pageRequest){
+        return ResponseResult.okResult(videoService.getVideoList(pageRequest));
     }
 
     /**

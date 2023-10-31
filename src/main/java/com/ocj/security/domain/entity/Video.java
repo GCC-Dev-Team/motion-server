@@ -79,6 +79,11 @@ public class Video implements Serializable {
      */
     @TableField(value = "update_time")
     private Date updateTime;
+    /**
+     * 视频的路径
+     */
+    @TableField(value = "address")
+    private String address;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
