@@ -18,7 +18,7 @@ public class VideoDataVO {
     /**
      *用户信息
      */
-    private UserVO user;
+    private UserVO creator;
     /**
      * 视频的封面信息
      */

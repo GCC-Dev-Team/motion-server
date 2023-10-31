@@ -35,8 +35,8 @@ public class VideoCover implements Serializable {
     /**
      * 
      */
-    @TableField(value = "length")
-    private Integer length;
+    @TableField(value = "height")
+    private Integer height;
 
     /**
      * 
@@ -71,7 +71,7 @@ public class VideoCover implements Serializable {
         return (this.getVideoId() == null ? other.getVideoId() == null : this.getVideoId().equals(other.getVideoId()))
             && (this.getVideoCoverUrl() == null ? other.getVideoCoverUrl() == null : this.getVideoCoverUrl().equals(other.getVideoCoverUrl()))
             && (this.getWidth() == null ? other.getWidth() == null : this.getWidth().equals(other.getWidth()))
-            && (this.getLength() == null ? other.getLength() == null : this.getLength().equals(other.getLength()))
+            && (this.getHeight() == null ? other.getHeight() == null : this.getHeight().equals(other.getHeight()))
             && (this.getCreatedAt() == null ? other.getCreatedAt() == null : this.getCreatedAt().equals(other.getCreatedAt()))
             && (this.getUpdatedAt() == null ? other.getUpdatedAt() == null : this.getUpdatedAt().equals(other.getUpdatedAt()));
     }
@@ -83,7 +83,7 @@ public class VideoCover implements Serializable {
         result = prime * result + ((getVideoId() == null) ? 0 : getVideoId().hashCode());
         result = prime * result + ((getVideoCoverUrl() == null) ? 0 : getVideoCoverUrl().hashCode());
         result = prime * result + ((getWidth() == null) ? 0 : getWidth().hashCode());
-        result = prime * result + ((getLength() == null) ? 0 : getLength().hashCode());
+        result = prime * result + ((getHeight() == null) ? 0 : getHeight().hashCode());
         result = prime * result + ((getCreatedAt() == null) ? 0 : getCreatedAt().hashCode());
         result = prime * result + ((getUpdatedAt() == null) ? 0 : getUpdatedAt().hashCode());
         return result;
@@ -98,7 +98,7 @@ public class VideoCover implements Serializable {
         sb.append(", videoId=").append(videoId);
         sb.append(", videoCoverUrl=").append(videoCoverUrl);
         sb.append(", width=").append(width);
-        sb.append(", length=").append(length);
+        sb.append(", length=").append(height);
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);
         sb.append(", serialVersionUID=").append(serialVersionUID);

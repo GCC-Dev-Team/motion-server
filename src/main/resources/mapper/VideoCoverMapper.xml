@@ -8,7 +8,7 @@
         <id property="videoId" column="video_id" jdbcType="VARCHAR"/>
         <result property="videoCoverUrl" column="video_cover_url" jdbcType="VARCHAR"/>
         <result property="width" column="width" jdbcType="INTEGER"/>
-        <result property="length" column="length" jdbcType="INTEGER"/>
+        <result property="height" column="height" jdbcType="INTEGER"/>
         <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
         <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
         <result property="coverAddress" column="cover_address" jdbcType="VARCHAR"/>
@@ -17,6 +17,6 @@
     <sql id="Base_Column_List">
         video_id
         ,video_cover_url,width,
-        length,created_at,updated_at
+        height,created_at,updated_at
     </sql>
 </mapper>

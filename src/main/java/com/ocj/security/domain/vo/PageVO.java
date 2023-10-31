@@ -19,7 +19,7 @@ public class PageVO<T> implements Serializable {
    //总页数
    private long totalPage;
    //当前页数
-   private long currPage;
+   private long currentPage;
    //列表数据
    private List<?> list;
    /**
@@ -27,13 +27,13 @@ public class PageVO<T> implements Serializable {
     * @param list        列表数据
     * @param totalCount  总记录数
     * @param pageSize    每页记录数
-    * @param currPage    当前页数
+    * @param currentPage    当前页数
     */
-   public PageVO(List<?> list, long totalCount, long pageSize, long currPage) {
+   public PageVO(List<?> list, long totalCount, long pageSize, long currentPage) {
       this.list = list;
       this.total = totalCount;
       this.pageSize = pageSize;
-      this.currPage = currPage;
+      this.currentPage = currentPage;
       this.totalPage = (int)Math.ceil((double)totalCount/pageSize);
    }
    /**
@@ -43,7 +43,7 @@ public class PageVO<T> implements Serializable {
       this.list = page.getRecords();
       this.total = page.getTotal();
       this.pageSize = (int) page.getSize();
-      this.currPage = (int) page.getCurrent();
+      this.currentPage = (int) page.getCurrent();
       this.totalPage = page.getPages();
    }
 

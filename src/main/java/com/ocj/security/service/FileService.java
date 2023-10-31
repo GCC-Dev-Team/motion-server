@@ -1,6 +1,7 @@
 package com.ocj.security.service;
 
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.domain.vo.CoverVO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
@@ -15,7 +16,8 @@ public interface FileService {
 
     String preview(String fileAddress);
 
-//    void
+
+    CoverVO urlGetPhotoImage(String imageUrl);
 
     /**
      * 对文件的操作

@@ -2,6 +2,7 @@ package com.ocj.security.service.impl;
 
 import com.google.gson.Gson;
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.service.FileService;
 import com.ocj.security.utils.FileUtil;
 import com.qiniu.common.QiniuException;
@@ -19,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 
 
 @Service
@@ -102,5 +106,31 @@ public class FileServiceImpl implements FileService {
             }
         }
         return Boolean.TRUE;
+    }
+
+
+    @Override
+    public CoverVO urlGetPhotoImage(String imageUrl) {
+
+        try {
+            URL url = new URL(imageUrl);
+            BufferedImage image = ImageIO.read(url);
+
+            if (image != null) {
+                int width = image.getWidth();
+                int height = image.getHeight();
+
+                System.out.println("Width: " + width);
+                System.out.println("Height: " + height);
+               return new CoverVO(imageUrl,width,height);
+            } else {
+                System.out.println("无法读取图像");
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

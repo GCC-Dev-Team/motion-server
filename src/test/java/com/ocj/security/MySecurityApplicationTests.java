@@ -3,6 +3,7 @@ package com.ocj.security;
 import com.ocj.security.config.QinuConfig;
 import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.entity.VideoCover;
+import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
@@ -24,8 +25,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -242,22 +246,58 @@ class MySecurityApplicationTests {
 //            videoCoverMapper.insert(videoCover);
 //        }
 
+//        List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
+//
+//        for (VideoCover videoCover:videoCovers){
+//            String videoCoverUrl = videoCover.getVideoCoverUrl();
+//            System.out.println(videoCoverUrl);
+//
+//            try {
+//                URL url = new URL("http://"+videoCoverUrl);
+//                BufferedImage image = ImageIO.read(url);
+//
+//                if (image != null) {
+//                    int width = image.getWidth();
+//                    int height = image.getHeight();
+//
+//                    System.out.println("Width: " + width);
+//                    System.out.println("Height: " + height);
+//                    videoCover.setLength(height);
+//                    videoCover.setWidth(width);
+//
+//
+//                } else {
+//                    System.out.println("无法读取图像");
+//
+//
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            videoCoverMapper.updateById(videoCover);
+//        }
+    }
+
+    @Test
+    void testPhoto(){
+//        List<Video> videos = videoMapper.selectList(null);
+//
+//        for (Video video:videos){
+//
+//            String url = video.getUrl();
+//            video.setUrl("http://"+url);
+//
+//            videoMapper.updateById(video);
+//        }
+
         List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
-
-        for (VideoCover videoCover:videoCovers){
-
+        for (VideoCover videoCover: videoCovers){
             String videoCoverUrl = videoCover.getVideoCoverUrl();
-            // 找到第一个出现的"/"的位置
-            int firstSlashIndex = videoCoverUrl.indexOf("/");
 
-            // 在第一个斜杠后面添加一个斜杠
-            String result = videoCoverUrl.substring(0, firstSlashIndex + 1) + "/" + videoCoverUrl.substring(firstSlashIndex + 1);
-
-            videoCover.setVideoCoverUrl(result);
+            videoCover.setVideoCoverUrl("http://"+videoCoverUrl);
 
             videoCoverMapper.updateById(videoCover);
-
-
         }
     }
 
