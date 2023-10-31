@@ -25,6 +25,9 @@ public class CommentVO implements Serializable {
     //点赞数
     private Long likeCount;
 
+    //是否被该用户点赞
+    boolean isLiked = false;
+
     //头像
     private String avatar;
 
