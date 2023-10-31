@@ -15,6 +15,8 @@ public interface FileService {
 
     String preview(String fileAddress);
 
+//    void
+
     /**
      * 对文件的操作
      * @param fileAddress 需要的是上传的key

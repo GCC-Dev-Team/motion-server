@@ -99,10 +99,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         videoDataVO.setUser(userVO);
 
         //TODO 等下再搞封面
-//        VideoCover videoCover = videoCoverMapper.selectById(videoId);
-//        BeanUtils.copyProperties(videoCover,videoDataVO);
+        VideoCover videoCover = videoCoverMapper.selectById(videoId);
+        CoverVO coverVO = new CoverVO();
+        BeanUtils.copyProperties(videoCover,coverVO);
 
-        CoverVO coverVO = new CoverVO("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A027e53eb4add4959.jpg", 100, 130);
+//        CoverVO coverVO = new CoverVO("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A027e53eb4add4959.jpg", 100, 130);
 
 
         videoDataVO.setCover(coverVO);
@@ -158,8 +159,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
 //        VideoCover videoCover = videoCoverMapper.selectById(videoId);
 //        BeanUtils.copyProperties(videoCover,videoDataVO);
 
-            CoverVO coverVO = new CoverVO("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A027e53eb4add4959.jpg", 100, 130);
+//            CoverVO coverVO = new CoverVO("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A027e53eb4add4959.jpg", 100, 130);
 
+            VideoCover videoCover = videoCoverMapper.selectById(video.getVideoId());
+            CoverVO coverVO = new CoverVO();
+            BeanUtils.copyProperties(videoCover,coverVO);
 
             videoDataVO.setCover(coverVO);
 

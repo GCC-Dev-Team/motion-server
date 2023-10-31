@@ -1,7 +1,11 @@
 package com.ocj.security;
 
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.entity.Video;
+import com.ocj.security.domain.entity.VideoCover;
 import com.ocj.security.domain.vo.VideoDataVO;
+import com.ocj.security.mapper.VideoCoverMapper;
+import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.utils.FileToMultipartFileConverter;
@@ -90,6 +94,20 @@ class MySecurityApplicationTests {
 
 
 
+    }
+    @Resource
+    VideoMapper videoMapper;
+    @Test
+    void mapperUpdate(){
+//        List<Video> videos = videoMapper.selectList(null);
+//        for (Video video:videos){
+//
+//            String url = video.getUrl();
+//            String substring = url.substring(29);
+////            System.out.println(substring);
+////            video.setAddress(substring);
+////            videoMapper.updateById(video);
+//        }
     }
     @Test
     void cu() {
@@ -205,6 +223,41 @@ class MySecurityApplicationTests {
             } catch (QiniuException e1) {
                 //ignore
             }
+        }
+    }
+    @Resource
+    VideoCoverMapper videoCoverMapper;
+
+    @Test
+    void updateVideoCover(){
+
+//        List<Video> videos = videoMapper.selectList(null);
+//        for (Video video : videos) {
+//
+//            fileService.processFile(video.getAddress(),"vframe/jpg/offset/1","/videoCover/"+video.getVideoId()+".jpg");
+//            VideoCover videoCover = new VideoCover();
+//            videoCover.setVideoId(video.getVideoId());
+//            videoCover.setVideoCoverUrl(qinuConfig.getDomain()+"/videoCover/"+video.getVideoId()+".jpg");
+//            videoCover.setCoverAddress("videoCover/"+video.getVideoId()+".jpg");
+//            videoCoverMapper.insert(videoCover);
+//        }
+
+        List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
+
+        for (VideoCover videoCover:videoCovers){
+
+            String videoCoverUrl = videoCover.getVideoCoverUrl();
+            // 找到第一个出现的"/"的位置
+            int firstSlashIndex = videoCoverUrl.indexOf("/");
+
+            // 在第一个斜杠后面添加一个斜杠
+            String result = videoCoverUrl.substring(0, firstSlashIndex + 1) + "/" + videoCoverUrl.substring(firstSlashIndex + 1);
+
+            videoCover.setVideoCoverUrl(result);
+
+            videoCoverMapper.updateById(videoCover);
+
+
         }
     }
 
