@@ -3,6 +3,8 @@ package com.ocj.security.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.vo.CommentVO;
+import com.ocj.security.enums.AppHttpCodeEnum;
+import com.qiniu.common.QiniuException;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public interface CommentService extends IService<Comment> {
 
-    void addComment(String videoId,String context);
+    AppHttpCodeEnum addComment(String videoId, String context) throws QiniuException;
 
     List<CommentVO> getCommentList(String videoId);
 

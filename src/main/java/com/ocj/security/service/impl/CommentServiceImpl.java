@@ -1,5 +1,7 @@
 package com.ocj.security.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -8,16 +10,19 @@ import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.User;
 
 import com.ocj.security.domain.vo.CommentVO;
+import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.exception.SystemException;
 import com.ocj.security.mapper.CommentMapper;
 import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.LikeCommentVideoService;
+import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RedisCache;
 import com.ocj.security.utils.SecurityUtils;
+import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,6 +31,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ocj.security.enums.AppHttpCodeEnum.CONTENT_VIOLATION;
 import static com.ocj.security.enums.AppHttpCodeEnum.CONTEXT_NOT_NULL;
 import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 
@@ -47,10 +53,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Resource
     private LikeCommentVideoService likeCommentVideoService;
     @Override
-    public void addComment(String videoId,String content) {
+    public AppHttpCodeEnum addComment(String videoId, String content) throws QiniuException {
         if (!StringUtils.hasText(content)){ //如果评论内容为空
             throw new SystemException(CONTEXT_NOT_NULL);
         }
+
+        //如果违规,返回true
+        if (trailTxt(content)){
+            return AppHttpCodeEnum.CONTENT_VIOLATION;
+        }
+
+
         Comment comment = Comment.builder()
                 .id(RandomUtil.generateRandomNumberString())
                 .content(content)
@@ -65,6 +78,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         redisCache.deleteObject("commentVideo::"+videoId);
 
+        return AppHttpCodeEnum.SUCCESS;
     }
 
 
@@ -135,6 +149,36 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //likeCommentVideoMapper.insert(likeCommentVideo);
         //likeCommentVideoService.save(likeCommentVideo);
         likeCommentVideoService.saveLike(likeCommentVideo);
+
+    }
+
+    @Resource
+    QiniuApiService qiniuApiService;
+    //七牛云文本内容审核
+    public boolean trailTxt(String content) throws QiniuException {
+        String textCensor = qiniuApiService.TextCensor(content);
+        log.info("七牛云返回:{}",textCensor);
+        JSONObject jsonObject = JSON.parseObject(textCensor);
+
+        //处理建议:pass-通过,block-建议删除
+        String suggestion = jsonObject.getJSONObject("result")
+                .getJSONObject("scenes")
+                .getJSONObject("antispam")
+                .getString("suggestion");
+
+
+        String label = jsonObject.getJSONObject("result")
+                .getJSONObject("scenes")
+                .getJSONObject("antispam")
+                .getJSONArray("details").getJSONObject(0).getString("label");
+
+        log.info("处理建议: {}",suggestion);
+        log.info("审核结果: {}",label);
+
+        if (suggestion.equals("block")){
+            return true;
+        }
+        return false;
 
     }
 

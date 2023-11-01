@@ -6,11 +6,13 @@ import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.domain.vo.VideoDataVO;
+import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.RedisCache;
+import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -58,13 +60,13 @@ public class VideoController {
     @Resource
     CommentService commentService;
     @PostMapping("/{videoId}/comment")
-    public ResponseResult addComment(@PathVariable String videoId, @RequestBody AddCommentRequest addCommentRequest){
-        commentService.addComment(videoId,addCommentRequest.getContent());
-        return ResponseResult.okResult();
+    public ResponseResult<AppHttpCodeEnum> addComment(@PathVariable String videoId, @RequestBody AddCommentRequest addCommentRequest) throws QiniuException {
+        AppHttpCodeEnum appHttpCodeEnumEnum = commentService.addComment(videoId, addCommentRequest.getContent());
+        return ResponseResult.errorResult(appHttpCodeEnumEnum);
     }
 
     @GetMapping("/{videoId}/comment/list")
-    //@Cacheable(cacheNames = "commentVideo",key = "#videoId")
+    @Cacheable(value = "commentVideo",key = "#videoId")
     public ResponseResult<List<CommentVO>> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList =  commentService.getCommentList(videoId);
         return ResponseResult.okResult(commentVOList);
@@ -77,6 +79,11 @@ public class VideoController {
     }
 
 
+    @GetMapping("/video/list/search/{videoName}")
+    public ResponseResult getVideoByName(@PathVariable String videoName){
+
+        return null;
+    }
 
 
 

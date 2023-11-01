@@ -1,5 +1,7 @@
 package com.ocj.security;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ocj.security.config.QinuConfig;
 import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.entity.VideoCover;
@@ -21,6 +23,7 @@ import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import com.qiniu.util.StringUtils;
 import com.qiniu.util.UrlSafeBase64;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,10 +39,38 @@ import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
+@Slf4j
 class MySecurityApplicationTests {
 
     @Resource
     VideoService videoService;
+
+
+    @Resource
+    QiniuApiService qiniuApiService;
+    @Test
+    public  void test() throws QiniuException {
+        String textCensor = qiniuApiService.TextCensor("asdafsffafafa");
+        log.info("七牛云返回:{}",textCensor);
+        JSONObject jsonObject = JSON.parseObject(textCensor);
+
+        //处理建议:pass-通过,block-建议删除
+        String suggestion = jsonObject.getJSONObject("result")
+                .getJSONObject("scenes")
+                .getJSONObject("antispam")
+                .getString("suggestion");
+
+
+        String label = jsonObject.getJSONObject("result")
+                .getJSONObject("scenes")
+                .getJSONObject("antispam")
+                .getJSONArray("details").getJSONObject(0).getString("label");
+
+        System.out.println("Suggestion: " + suggestion);
+        System.out.println("label:" + label);
+    }
+
+
 
 //    @Test
 //    void contextLoads() {
@@ -303,8 +334,8 @@ class MySecurityApplicationTests {
     }
     @Resource
     Auth auth;
-    @Resource
-    QiniuApiService qiniuApiService;
+    //@Resource
+    //QiniuApiService qiniuApiService;
     @Test
     void pt() throws QiniuException {
 //

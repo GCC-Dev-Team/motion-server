@@ -6,6 +6,7 @@ public enum AppHttpCodeEnum {
     // 登录
     NEED_LOGIN(401,"需要登录后操作"),
     NO_OPERATOR_AUTH(403,"无权限操作"),
+
     SYSTEM_ERROR(500,"出现错误"),
     USERNAME_EXIST(501,"用户名已存在"),
     PHONENUMBER_EXIST(502,"手机号已存在"),
@@ -24,7 +25,9 @@ public enum AppHttpCodeEnum {
 
     EMAIL_NOT_NULL(511,"邮箱不能为空"),
 
-    NICKNAME_EXIST(512, "昵称已存在");
+    NICKNAME_EXIST(512, "昵称已存在"),
+
+    CONTENT_VIOLATION(513,"内容违规,不予发送");
 
 
 
