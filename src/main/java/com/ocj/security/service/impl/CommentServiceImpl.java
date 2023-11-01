@@ -80,9 +80,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         LambdaQueryWrapper<LikeCommentVideo> queryLike = new LambdaQueryWrapper<>();
         try {
-            //如果查看评论的用户已经登录,获取userId
-            String userId = SecurityUtils.getUserId();
-            queryLike.eq(LikeCommentVideo::getUserId,userId);
+            //如果查看评论的用户已经登录
+            queryLike.eq(LikeCommentVideo::getUserId,SecurityUtils.getUserId());
         }catch (Exception ignored){
             log.info("用户未登录");
         }
@@ -96,9 +95,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             //数量>1:点赞过
             likeCommentVideoService.count(queryLike);
             //如果已经登录,并且对该评论已经点赞过
-            if ((likeCommentVideoService.count(queryLike))!=0){
-                commentVO.setLiked(true);
+            try {
+                if (SecurityUtils.getUserId()!=null &&(likeCommentVideoService.count(queryLike))!=0){
+                    commentVO.setLiked(true);
+                }
+            } catch (Exception ignored) {
+
             }
+
         }
         redisCache.setCacheList("commentVideo::"+videoId,commentVOList);
         return commentVOList;
