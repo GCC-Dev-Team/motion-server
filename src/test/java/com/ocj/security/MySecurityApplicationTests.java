@@ -26,12 +26,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,7 +93,7 @@ class MySecurityApplicationTests {
     FileService fileService;
 
     @Test
-    void showConfig(){
+    void showConfig() {
 //        String accessKey = qinuConfig.getAccessKey();
 //        String bucket = qinuConfig.getBucket();
 //        System.out.printf(accessKey+bucket);
@@ -98,12 +101,13 @@ class MySecurityApplicationTests {
 //        fileService.processFile("video/video:00e1030e235a4964.mp4","vframe/jpg/offset/1","success.jpg");
 
 
-
     }
+
     @Resource
     VideoMapper videoMapper;
+
     @Test
-    void mapperUpdate(){
+    void mapperUpdate() {
 //        List<Video> videos = videoMapper.selectList(null);
 //        for (Video video:videos){
 //
@@ -114,6 +118,7 @@ class MySecurityApplicationTests {
 ////            videoMapper.updateById(video);
 //        }
     }
+
     @Test
     void cu() {
 
@@ -134,7 +139,7 @@ class MySecurityApplicationTests {
         String bucket = "motion1024";
 //待处理文件名
 //        String key = "video/video:0375101c743d404a.mp4";
-        String key="video/video:00e1030e235a4964.mp4";
+        String key = "video/video:00e1030e235a4964.mp4";
 
         Auth auth = Auth.create(accessKey, secretKey);
 
@@ -161,22 +166,19 @@ class MySecurityApplicationTests {
         OperationManager operationManager = new OperationManager(auth, cfg);
 
 
-
-
         String fops = "vframe/jpg/offset/7";
 
-//        String fops=
         System.out.println(fops);
         try {
 
-            String persistentId = operationManager.pfop(bucket, key,fops, null, null, true);
+            String persistentId = operationManager.pfop(bucket, key, fops, null, null, true);
             //可以根据该 persistentId 查询任务处理进度
             System.out.println(persistentId);
 
             OperationStatus operationStatus = operationManager.prefop(persistentId);
             //解析 operationStatus 的结果
 
-            System.out.printf(operationStatus.inputBucket+operationStatus.inputKey);
+            System.out.printf(operationStatus.inputBucket + operationStatus.inputKey);
 
             System.out.println(operationStatus.toString());
         } catch (QiniuException e) {
@@ -188,7 +190,7 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    void pu(){
+    void pu() {
         //设置账号的AK,SK
         String ACCESS_KEY = "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT";
         String SECRET_KEY = "Zm2fQUO3zMIH7R8psNby8oCqywT8QshxcXjNc54A";
@@ -196,7 +198,7 @@ class MySecurityApplicationTests {
         Configuration cfg = new Configuration(Region.region0());
         cfg.resumableUploadAPIVersion = Configuration.ResumableUploadAPIVersion.V2;// 指定分片上传版本
         //新建一个OperationManager对象
-        OperationManager operater = new OperationManager(auth,cfg);
+        OperationManager operater = new OperationManager(auth, cfg);
         //设置要转码的空间和key，并且这个key在你空间中存在
         String bucket = "motion1024";
         String key = "video/video:00e1030e235a4964.mp4";
@@ -230,11 +232,12 @@ class MySecurityApplicationTests {
             }
         }
     }
+
     @Resource
     VideoCoverMapper videoCoverMapper;
 
     @Test
-    void updateVideoCover(){
+    void updateVideoCover() {
 
 //        List<Video> videos = videoMapper.selectList(null);
 //        for (Video video : videos) {
@@ -281,7 +284,7 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    void testPhoto(){
+    void testPhoto() {
 //        List<Video> videos = videoMapper.selectList(null);
 //
 //        for (Video video:videos){
@@ -293,18 +296,20 @@ class MySecurityApplicationTests {
 //        }
 
         List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
-        for (VideoCover videoCover: videoCovers){
+        for (VideoCover videoCover : videoCovers) {
             String videoCoverUrl = videoCover.getVideoCoverUrl();
 
-            videoCover.setVideoCoverUrl("http://"+videoCoverUrl);
+            videoCover.setVideoCoverUrl("http://" + videoCoverUrl);
 
             videoCoverMapper.updateById(videoCover);
         }
     }
+
     @Resource
     Auth auth;
     @Resource
     QiniuApiService qiniuApiService;
+
     @Test
     void pt() throws QiniuException {
 //
@@ -312,13 +317,68 @@ class MySecurityApplicationTests {
 //        String s = qiniuApiService.ImageCensor("http://s36fh9xu3.hn-bkt.clouddn.com//videoCover/video:00e1030e235a4964.jpg");
 //
 //        System.out.println(s);
-       // String videoCensorResultByJobID = qiniuApiService.getVideoCensorResultByJobID("6541a661000187045bc68636153ee893");
+        // String videoCensorResultByJobID = qiniuApiService.getVideoCensorResultByJobID("6541a661000187045bc68636153ee893");
 //        System.out.println(s);
         //System.out.println(videoCensorResultByJobID);
-     //   String s = qiniuApiService.VideoCensor("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A03c591d441514b61.mp4");
+//        String s = qiniuApiService.VideoCensor("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A03c591d441514b61.mp4");
+//
+//        System.out.println(s);
+//  System.out.println(qiniuApiService.getVideoCensorResultByJobID("6541aa06a2cfbcaec1db2747"));
+    }
 
-       // System.out.println(s);
-        System.out.println(qiniuApiService.getVideoCensorResultByJobID("6541aa06a2cfbcaec1db2747"));
+
+    @Test
+    void geToken() {
+//        String method = "POST"; // 替换为你的请求方法，如 POST
+//        String path = "/v3/jobs/video/6541ed8a4bfb6070fd95aac9"; // 替换为你的请求路径
+//        String rawQuery = ""; // 替换为你的查询参数，如果为空则留空字符串
+//        String host = "ai.qiniuapi.com"; // 替换为你的请求域名
+//        String contentType = "application/json"; // 替换为你的请求内容类型，如果为空则留空字符串
+//        String bodyStr="";
+//        //String bodyStr = "{\"data\": {\"uri\":\"http://img3.redocn.com/20120528/Redocn_2012052817213559.jpg\"}}"; // 替换为请求体内容，如果为空则留空字符串
+//        String secretKey = "Zm2fQUO3zMIH7R8psNby8oCqywT8QshxcXjNc54A"; // 替换为你的密钥
+//        String accessKey = "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT"; // 替换为你的访问密钥
+//
+//        // Step 1: 构造待签名的 Data
+//        StringBuilder data = new StringBuilder();
+//        data.append(method).append(" ").append(path);
+//        if (!rawQuery.isEmpty()) {
+//            data.append("?").append(rawQuery);
+//        }
+//        data.append("\nHost: ").append(host);
+//        if (!contentType.isEmpty()) {
+//            data.append("\nContent-Type: ").append(contentType);
+//        }
+//        data.append("\n\n");
+//        if (!bodyStr.isEmpty() && !contentType.isEmpty() && !contentType.equals("application/octet-stream")) {
+//            data.append(bodyStr);
+//        }
+//
+//        try {
+//            // Step 2: 计算 HMAC-SHA1 签名
+//            Mac hmacSha1 = Mac.getInstance("HmacSHA1");
+//            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA1");
+//            hmacSha1.init(secretKeySpec);
+//            byte[] signatureBytes = hmacSha1.doFinal(data.toString().getBytes("UTF-8"));
+//
+//            // Step 2: 对签名结果进行 URL 安全的 Base64 编码
+//            String encodedSign = Base64.getUrlEncoder().withoutPadding().encodeToString(signatureBytes);
+//
+//            // Step 3: 拼接管理凭证
+//            String qiniuToken = "Qiniu " + accessKey + ":" + encodedSign;
+//
+//            System.out.println("Qiniu Token: " + qiniuToken);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+    @Test
+    void Tes() throws QiniuException {
+//        String s = qiniuApiService.TextCensor("和hi");
+//        System.out.println(s);
+        Boolean b = qiniuApiService.processFile("video/video:a7689c00e8e74674.mp4", "?avinfo", "/videotet/www.png");
+        System.out.println(b);
     }
 
 }
