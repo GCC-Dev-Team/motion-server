@@ -160,6 +160,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         log.info("七牛云返回:{}",textCensor);
         JSONObject jsonObject = JSON.parseObject(textCensor);
 
+
         //处理建议:pass-通过,block-建议删除
         String suggestion = jsonObject.getJSONObject("result")
                 .getJSONObject("scenes")
