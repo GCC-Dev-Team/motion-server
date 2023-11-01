@@ -8,6 +8,7 @@ import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.service.FileService;
+import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.utils.FileToMultipartFileConverter;
 import com.qiniu.common.QiniuException;
@@ -299,6 +300,25 @@ class MySecurityApplicationTests {
 
             videoCoverMapper.updateById(videoCover);
         }
+    }
+    @Resource
+    Auth auth;
+    @Resource
+    QiniuApiService qiniuApiService;
+    @Test
+    void pt() throws QiniuException {
+//
+//        System.out.println(auth);
+//        String s = qiniuApiService.ImageCensor("http://s36fh9xu3.hn-bkt.clouddn.com//videoCover/video:00e1030e235a4964.jpg");
+//
+//        System.out.println(s);
+       // String videoCensorResultByJobID = qiniuApiService.getVideoCensorResultByJobID("6541a661000187045bc68636153ee893");
+//        System.out.println(s);
+        //System.out.println(videoCensorResultByJobID);
+     //   String s = qiniuApiService.VideoCensor("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A03c591d441514b61.mp4");
+
+       // System.out.println(s);
+        System.out.println(qiniuApiService.getVideoCensorResultByJobID("6541aa06a2cfbcaec1db2747"));
     }
 
 }

@@ -41,7 +41,6 @@ public class VideoController {
     @GetMapping("/list")
     public ResponseResult getVideoList(Integer currentPage,Integer pageSize){
         PageRequest pageRequest=new PageRequest(currentPage,pageSize);
-        System.out.println(pageRequest);
         return ResponseResult.okResult(videoService.getVideoList(pageRequest));
     }
 

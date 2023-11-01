@@ -16,7 +16,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
 server:
-  port: 8061
+  port: 8060
 
 quin:
   accessKey: "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT"

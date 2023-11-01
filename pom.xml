@@ -116,6 +116,19 @@
             <version>1.4</version>
         </dependency>
 
+<!--&lt;!&ndash;http工具类使用&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>cn.hutool</groupId>-->
+<!--            <artifactId>hutool-all</artifactId>-->
+<!--            <version>5.7.22</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.httpcomponents</groupId>-->
+<!--            <artifactId>httpmime</artifactId>-->
+<!--            <version>4.3.2</version>-->
+<!--        </dependency>-->
+
+
 
 
     </dependencies>

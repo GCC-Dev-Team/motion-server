@@ -47,6 +47,17 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
 
     @Resource
     VideoCoverMapper videoCoverMapper;
+    @Override
+    public List<VideoDataVO> getVideoList() {
+        List<String> lies = videoMapper.randVideoList();
+        List<VideoDataVO> videoDataVOS = new ArrayList<>(); // 初始化为一个空的ArrayList
+        for (String lie : lies) {
+            VideoDataVO videoData = getVideoDataById(lie);
+            videoDataVOS.add(videoData);
+        }
+
+        return videoDataVOS;
+    }
 
     @Override
     public ResponseResult addVideo(MultipartFile file) {
@@ -76,18 +87,16 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return ResponseResult.okResult(fileAddress);
     }
 
-    @Override
-    public VideoDataVO getVideoDataById(String videoId) {
+    public VideoDataVO videoToVideoDataVO(Video video){
+
         VideoDataVO videoDataVO = new VideoDataVO();
 
-
-        Video video = videoMapper.selectById(videoId);
         BeanUtils.copyProperties(video, videoDataVO);
 
         String categoryId = video.getCategoryId();
         String publisherId = video.getPublisher();
 
-        videoDataVO.setVideoCommentCount(commentService.getCommentCount(videoId));
+        videoDataVO.setVideoCommentCount(commentService.getCommentCount(video.getVideoId()));
 
         Category category = categoryMapper.selectById(categoryId);
         CategoryVO categoryVO = new CategoryVO();
@@ -100,32 +109,27 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         userVO.setUserName(user.getUserName());
         videoDataVO.setCreator(userVO);
 
-        //TODO 等下再搞封面
-        VideoCover videoCover = videoCoverMapper.selectById(videoId);
+        VideoCover videoCover = videoCoverMapper.selectById(video.getVideoId());
         CoverVO coverVO = new CoverVO();
-        coverVO.setVideoCoverUrl(videoCover.getVideoCoverUrl());
-        coverVO.setWidth(videoCover.getWidth());
-        coverVO.setHeight(videoCover.getHeight());
-
-
-//        CoverVO coverVO = new CoverVO("http://s36fh9xu3.hn-bkt.clouddn.com/video/video%3A027e53eb4add4959.jpg", 100, 130);
+        BeanUtils.copyProperties(videoCover, coverVO);
 
         videoDataVO.setCover(coverVO);
+
+        videoDataVO.setCreateAt(video.getCreateTime());
+        videoDataVO.setUpdateAt(video.getUpdateTime());
+
         return videoDataVO;
-    }
 
+    }
     @Override
-    public List<VideoDataVO> getVideoList() {
-        List<String> lies = videoMapper.randVideoList();
-        List<VideoDataVO> videoDataVOS = new ArrayList<>(); // 初始化为一个空的ArrayList
-        for (String lie : lies) {
-            VideoDataVO videoData = getVideoDataById(lie);
-            videoDataVOS.add(videoData);
-        }
+    public VideoDataVO getVideoDataById(String videoId) {
 
-        return videoDataVOS;
+        Video video = videoMapper.selectById(videoId);
 
+        return videoToVideoDataVO(video);
     }
+
+
 
     @Override
     public PageVO getVideoList(PageRequest pageRequest) {
@@ -137,44 +141,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
 
         List<Video> records = videoPage.getRecords();
 
-
         List<VideoDataVO> videoDataVOS = new ArrayList<>();
 
-
         for (Video video : records) {
-
-            VideoDataVO videoDataVO = new VideoDataVO();
-
-            BeanUtils.copyProperties(video, videoDataVO);
-
-            String categoryId = video.getCategoryId();
-            String publisherId = video.getPublisher();
-
-            videoDataVO.setVideoCommentCount(commentService.getCommentCount(video.getVideoId()));
-
-            Category category = categoryMapper.selectById(categoryId);
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(category, categoryVO);
-            videoDataVO.setCategory(categoryVO);
-
-            User user = userMapper.selectById(publisherId);
-            UserVO userVO = new UserVO();
-            userVO.setUserId(user.getId());
-            userVO.setUserName(user.getUserName());
-            videoDataVO.setCreator(userVO);
-
-            VideoCover videoCover = videoCoverMapper.selectById(video.getVideoId());
-            CoverVO coverVO = new CoverVO();
-            BeanUtils.copyProperties(videoCover, coverVO);
-
-            videoDataVO.setCover(coverVO);
-
-            videoDataVO.setCreateAt(video.getCreateTime());
-            videoDataVO.setUpdateAt(video.getUpdateTime());
-
-            videoDataVOS.add(videoDataVO);
+            videoDataVOS.add(videoToVideoDataVO(video));
         }
-
 
         return new PageVO(videoDataVOS, videoPage.getTotal()
                 , videoPage.getSize()
