@@ -29,7 +29,7 @@ public class UserController {
     /**
      * 上传头像
      */
-    @PostMapping("/uploadFile")
+    @PostMapping("/avatar")
     public ResponseResult uploadFile(MultipartFile file){
         //获取原始文件名
         String originalFilename = file.getOriginalFilename();

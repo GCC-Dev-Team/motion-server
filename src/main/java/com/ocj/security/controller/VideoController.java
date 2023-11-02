@@ -1,31 +1,23 @@
 package com.ocj.security.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.dto.AddVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
-import com.ocj.security.domain.entity.Comment;
-import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.vo.CommentVO;
-import com.ocj.security.domain.vo.PageVO;
 import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
-import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
-import com.ocj.security.utils.BeanCopyUtils;
-import com.ocj.security.utils.RedisCache;
 import com.qiniu.common.QiniuException;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 未测试，ing
@@ -74,8 +66,15 @@ public class VideoController {
     @GetMapping("/{videoId}/comment/list")
     @Cacheable(value = "commentVideo",key = "#videoId")
     public ResponseResult<List<CommentVO>> getComment(@PathVariable String videoId){
-        List<CommentVO> commentVOList =  commentService.getCommentList(videoId);
-        return ResponseResult.okResult(commentVOList);
+        List<CommentVO> commentVOList = new ArrayList<>();
+        try {
+            //尝试获取评论
+            commentVOList = commentService.getCommentList(videoId);
+            return ResponseResult.okResult(commentVOList);
+        } catch (Exception e) {
+            //获取失败:无评论
+            return ResponseResult.okResult(commentVOList);
+        }
     }
 
     @PostMapping ("/comment/{commentId}/like")

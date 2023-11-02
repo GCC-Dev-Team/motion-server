@@ -28,10 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.ocj.security.enums.AppHttpCodeEnum.CONTENT_VIOLATION;
 import static com.ocj.security.enums.AppHttpCodeEnum.CONTEXT_NOT_NULL;
 import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 
@@ -100,12 +98,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             log.info("用户未登录");
         }
         //对评论的 头像 和 用户名 赋值
-        for (CommentVO commentVO :commentVOList){
+        for (CommentVO commentVO : commentVOList){
             User user = userMapper.selectById(commentVO.getUserId());
             commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
             //在点赞表中,用户对应的数据
-            queryLike.eq(LikeCommentVideo::getIsLiked,commentVO.getId());
+            queryLike.eq(LikeCommentVideo::getIsLiked, commentVO.getId());
             //数量>1:点赞过
             likeCommentVideoService.count(queryLike);
             //如果已经登录,并且对该评论已经点赞过
@@ -118,7 +116,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             }
 
         }
-        redisCache.setCacheList("commentVideo::"+videoId,commentVOList);
+        redisCache.setCacheList("commentVideo::"+videoId, commentVOList);
         return commentVOList;
     }
 
