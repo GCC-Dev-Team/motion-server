@@ -91,6 +91,7 @@ public class VideoController {
     @GetMapping(value = "/list/search/{videoName}",produces = "text/html;charset=UTF-8")
     public ResponseResult<List<VideoDataVO>> getVideoByName(@PathVariable String videoName,Integer currentPage,Integer pageSize){
 
+
         PageRequest pageRequest=new PageRequest(currentPage,pageSize);
         videoService.getVideoByName(pageRequest,videoName);
 
