@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author L
@@ -129,6 +130,31 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return videoToVideoDataVO(video);
     }
 
+    @Override
+    public PageVO getVideoByName(PageRequest pageRequest,String videoName) {
+        Page<Video> objectPage = new Page<>(pageRequest.getCurrentPage(), pageRequest.getPageSize());
+
+        QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+
+        Page<Video> videoPage = videoMapper.selectPage(objectPage, videoQueryWrapper);
+
+
+        List<Video> records = videoPage.getRecords();
+
+        List<VideoDataVO> videoDataVOS = new ArrayList<>();
+        //筛选records,并且迭代赋值
+        for (Video video : records.stream()
+                .filter(record -> record.getDescription().contains(videoName))
+                .collect(Collectors.toList())) {
+            videoDataVOS.add(videoToVideoDataVO(video));
+        }
+
+        return new PageVO(videoDataVOS, videoPage.getTotal()
+                , videoPage.getSize()
+                , videoPage.getCurrent());
+
+        //TODO 先筛选再分页??
+    }
 
 
     @Override

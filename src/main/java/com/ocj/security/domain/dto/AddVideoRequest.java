@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor        //TODO 加上这里会编译报错
 public class AddVideoRequest {
 }

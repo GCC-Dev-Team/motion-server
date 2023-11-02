@@ -1,11 +1,14 @@
 package com.ocj.security.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.dto.AddVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.Comment;
+import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.vo.CommentVO;
+import com.ocj.security.domain.vo.PageVO;
 import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 未测试，ing
@@ -81,10 +85,23 @@ public class VideoController {
     }
 
 
-    @GetMapping("/video/list/search/{videoName}")
-    public ResponseResult getVideoByName(@PathVariable String videoName){
+    /**
+     * @param videoName
+     *
+    */
+    @GetMapping(value = "/list/search/{videoName}",produces = "text/html;charset=UTF-8")
+    public ResponseResult<List<VideoDataVO>> getVideoByName(@PathVariable String videoName,Integer currentPage,Integer pageSize){
 
-        return null;
+        PageRequest pageRequest=new PageRequest(currentPage,pageSize);
+        videoService.getVideoByName(pageRequest,videoName);
+
+        return ResponseResult.okResult();
+    }
+
+    @GetMapping("/abc")
+    public String testABC(){
+
+        return "hello kizuna";
     }
 
 
