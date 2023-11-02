@@ -6,7 +6,6 @@ import com.ocj.security.domain.dto.RegisterRequest;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.UserService;
-import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.CheckStringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -65,5 +64,12 @@ public class UserServiceImpl implements UserService {
 
         //返回注册成功的消息
         return ResponseResult.okResult("注册成功");
+    }
+
+    @Override
+    public void setAvatar(String userId, String avatarURL) {
+        User user = userMapper.selectById(userId);
+        user.setAvatar(avatarURL);
+        userMapper.updateById(user);
     }
 }
