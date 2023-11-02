@@ -64,7 +64,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     public ResponseResult addVideo(MultipartFile file) {
 
 
-        String videoId = "video:" + RandomUtil.generateRandomString(16);
+        String videoId = "video" + RandomUtil.generateRandomString(16);
 
         String fileAddress = fileService.uploadFile(file, "video/" + videoId);
 
