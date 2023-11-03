@@ -40,7 +40,9 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -191,14 +193,14 @@ class MySecurityApplicationTests {
     }
     @Test
     void testFile(){
-        String url="http://s36fh9xu3.hn-bkt.clouddn.com/videoCover/cecf27b09a594777.jpg";
-        System.out.println(fileService.urlGetPhotoImage(url).toString());
-
-        Integer height = fileService.urlGetPhotoImage(url).getHeight();
-        Integer width = fileService.urlGetPhotoImage(url).getWidth();
-        VideoCover videoCover = new VideoCover();
-        videoCover.setWidth(width);
-        videoCover.setHeight(height);
+//        String url="http://s36fh9xu3.hn-bkt.clouddn.com/videoCover/cecf27b09a594777.jpg";
+//        System.out.println(fileService.urlGetPhotoImage(url).toString());
+//
+//        Integer height = fileService.urlGetPhotoImage(url).getHeight();
+//        Integer width = fileService.urlGetPhotoImage(url).getWidth();
+//        VideoCover videoCover = new VideoCover();
+//        videoCover.setWidth(width);
+//        videoCover.setHeight(height);
 //        String url="http://s36fh9xu3.hn-bkt.clouddn.com//videoCover/aa4ca052485b4934.jpg";
 ////
 //        fileService.urlGetPhotoImage(url);
@@ -206,6 +208,17 @@ class MySecurityApplicationTests {
 //        System.out.println(url.substring(domain.length()+1));
 //        Boolean b = fileService.processFile("video/aa4ca052485b4934.mp4", OperationEnum.Video_Screenshot.getOperationOrder(), "videoCover/aa4ca052485b4934.jpg");
 //        System.out.println(b);
+    }
+
+    @Test
+    public void enco() throws UnsupportedEncodingException {
+//        // 参数一：要编码的字符串 参数二：指定字符集
+//        String data="美女";
+//        System.out.println(URLEncoder.encode(data, "utf-8"));
+
+//        Page<Video> videoPage = videoMapper.selectPage(new Page<>(1,10),
+//                null);
+//        System.out.println(videoPage.getSize());
     }
 
 }

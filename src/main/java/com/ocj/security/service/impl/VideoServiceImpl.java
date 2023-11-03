@@ -1,12 +1,11 @@
 package com.ocj.security.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.entity.Page;
 import com.ocj.security.domain.dto.PublishVideoRequest;
-import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.*;
 import com.ocj.security.domain.vo.*;
 import com.ocj.security.enums.AppHttpCodeEnum;
@@ -21,16 +20,14 @@ import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RegexCheckStringUtil;
 import com.ocj.security.utils.SecurityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,9 +55,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     VideoCoverMapper videoCoverMapper;
     @Resource
     QinuConfig qinuConfig;
-
-    private static final Logger log = LoggerFactory.getLogger(VideoServiceImpl.class);
-
 
 
     @Override
@@ -106,7 +100,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        CoverVO coverVO=fileService.urlGetPhotoImage(videoCoverUrl);
+        CoverVO coverVO = fileService.urlGetPhotoImage(videoCoverUrl);
 
         videoCover.setWidth(coverVO.getWidth());
         videoCover.setHeight(coverVO.getHeight());
@@ -118,45 +112,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return ResponseResult.okResult(video.getUrl());
     }
 
-    @Override
-    public List<VideoDataVO> getVideoList() {
-        List<String> lies = videoMapper.randVideoList();
-        List<VideoDataVO> videoDataVOS = new ArrayList<>(); // 初始化为一个空的ArrayList
-        for (String lie : lies) {
-            VideoDataVO videoData = getVideoDataById(lie);
-            videoDataVOS.add(videoData);
-        }
-
-        return videoDataVOS;
-    }
-
-    @Override
-    public ResponseResult publishVideo(MultipartFile file) {
-
-
-        String videoId = "video" + RandomUtil.generateRandomString(16);
-
-        String fileAddress = fileService.uploadFile(file, "video/" + videoId);
-
-        Random random = new Random();
-        int randomNumber = random.nextInt(3) + 1;
-
-        Video video = new Video();
-        video.setVideoId(videoId);
-        video.setUrl(fileAddress);
-        video.setDescription("测试视频");
-        video.setStatus(1);
-        video.setTags("#测试,最新标签，这个不是分类");
-        video.setViews(0L);
-        video.setLikeCount(0L);
-
-        video.setCategoryId("4");
-        video.setPublisher("98bf4c7f-fd20-4683-8323-f45ee72f0d1b");
-
-        save(video);
-
-        return ResponseResult.okResult(fileAddress);
-    }
 
     public VideoDataVO videoToVideoDataVO(Video video) {
 
@@ -201,45 +156,44 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return videoToVideoDataVO(video);
     }
 
-    @Override
-    public PageVO getVideoByName(PageRequest pageRequest, String videoName) {
 
-        QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
-        videoQueryWrapper.like("tags", videoName).or().like("description", videoName);
+    public PageVO getVideoList(Page page, QueryWrapper<Video> queryWrapper) {
 
-        Page<Video> videoPage = videoMapper.selectPage(new Page<>(pageRequest.getCurrentPage(), pageRequest.getPageSize()), videoQueryWrapper);
+        com.baomidou.mybatisplus.extension.plugins.pagination.Page<Video> videoPage = videoMapper.selectPage(new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(page.getCurrentPage(), page.getPageSize()),
+                queryWrapper);
 
         List<Video> records = videoPage.getRecords();
 
         List<VideoDataVO> videoDataVOS = new ArrayList<>();
-        //筛选records,并且迭代赋值
+
         for (Video video : records) {
             videoDataVOS.add(videoToVideoDataVO(video));
         }
 
-        return new PageVO(videoDataVOS, videoPage.getTotal(), videoPage.getSize(), videoPage.getCurrent());
+        return new PageVO(videoDataVOS, videoPage.getTotal(),
+                videoPage.getSize(), videoPage.getCurrent());
     }
 
-
     @Override
-    public PageVO getVideoList(PageRequest pageRequest) {
-        Page<Video> objectPage = new Page<>(pageRequest.getCurrentPage(), pageRequest.getPageSize());
-
+    public ResponseResult getVideoList(Integer currentPage, Integer pageSize, String search, String categoryId, String[] tag) {
+        Page page = new Page(currentPage, pageSize);
         QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+        videoQueryWrapper.eq("status", 1);
+        System.out.println(categoryId);
 
-        Page<Video> videoPage = videoMapper.selectPage(objectPage, videoQueryWrapper);
 
-        List<Video> records = videoPage.getRecords();
-
-        List<VideoDataVO> videoDataVOS = new ArrayList<>();
-
-        for (Video video : records) {
-            videoDataVOS.add(videoToVideoDataVO(video));
+        if (search != null) {
+            videoQueryWrapper.like("description", search);
         }
-
-        return new PageVO(videoDataVOS, videoPage.getTotal()
-                , videoPage.getSize()
-                , videoPage.getCurrent());
+        if (categoryId != null) {
+            videoQueryWrapper.eq("category_id", categoryId);
+        }
+//       if (tag != null) {
+//
+//           videoQueryWrapper.like("", Arrays.stream(tag))
+//
+//        }
+        return ResponseResult.okResult(getVideoList(page, videoQueryWrapper));
     }
 }
 

@@ -1,4 +1,4 @@
-package com.ocj.security.domain.dto;
+package com.ocj.security.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageRequest implements Serializable {
+public class Page implements Serializable {
     @Serial
     private static final long serialVersionUID = -6928715001184572156L;
 

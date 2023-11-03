@@ -3,13 +3,13 @@ package com.ocj.security.controller;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.dto.PublishVideoRequest;
-import com.ocj.security.domain.dto.PageRequest;
+
 import com.ocj.security.domain.vo.CommentDataVO;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.VideoService;
-import com.ocj.security.utils.BeanCopyUtils;
+
 import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,15 +36,14 @@ public class VideoController {
         return videoService.publishVideo(file,publishVideoRequest);
     }
 
-    /**
-     * 获取视频列表
-     * @return
-     */
-    @GetMapping("/list")
-    public ResponseResult getVideoList(Integer currentPage,Integer pageSize){
-        PageRequest pageRequest=new PageRequest(currentPage,pageSize);
-        return ResponseResult.okResult(videoService.getVideoList(pageRequest));
+
+
+    @GetMapping(value = "/list",produces = "application/json; charset=utf-8")
+    public ResponseResult getVideoList(@RequestParam("currentPage") Integer currentPage, @RequestParam("pageSize") Integer pageSize, String search, String categoryId, String [] tag){
+
+        return videoService.getVideoList(currentPage,pageSize,search,categoryId,tag);
     }
+
 
     /**
      * 获取每个视频详细信息
@@ -88,21 +87,15 @@ public class VideoController {
     }
 
 
-    /**
-     * @param videoName
-     */
-    @GetMapping(value = "/list/search")
-    public ResponseResult getVideoByName(String videoName, Integer currentPage, Integer pageSize){
 
-        PageRequest pageRequest=new PageRequest(currentPage,pageSize);
-        return ResponseResult.okResult( videoService.getVideoByName(pageRequest,videoName));
-    }
+//    @GetMapping(value = "/abc/{userid}",produces = "application/json; charset=utf-8")
+//    public String testABC(@PathVariable String userid){
+//
+//        System.out.println(userid);
+//        return "hello kizuna"+userid;
+//    }
 
-    @GetMapping("/abc")
-    public String testABC(){
 
-        return "hello kizuna";
-    }
 
 
 
