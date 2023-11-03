@@ -21,8 +21,6 @@ public interface CommentService extends IService<Comment> {
 
     List<CommentVO> getCommentList(String videoId);
 
-    void addLikesCount(String videoId, String CommentId);
-
     int getCommentCount(String videoId);
     void addLikesCount(String commentId);
 }

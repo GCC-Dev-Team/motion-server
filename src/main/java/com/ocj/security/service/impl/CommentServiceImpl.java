@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.User;
@@ -31,6 +32,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.ocj.security.enums.AppHttpCodeEnum.CONTEXT_NOT_NULL;
+import static com.ocj.security.enums.AppHttpCodeEnum.NEED_LOGIN;
 import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 
 
@@ -80,6 +82,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
 
+    @Resource
+    private LikeCommentVideoMapper likeCommentVideoMapper;
 
     @Override
     public List<CommentVO> getCommentList(String videoId) {
@@ -90,43 +94,37 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         List<Comment> commentList = list(queryWrapper);
         List<CommentVO> commentVOList = BeanCopyUtils.copyBeanList(commentList, CommentVO.class);
 
-        LambdaQueryWrapper<LikeCommentVideo> queryLike = new LambdaQueryWrapper<>();
         try {
             //如果查看评论的用户已经登录
-            queryLike.eq(LikeCommentVideo::getUserId,SecurityUtils.getUserId());
+            SecurityUtils.getUserId();
         }catch (Exception ignored){
             log.info("用户未登录");
+            //return ResponseResult.errorResult(NEED_LOGIN);
         }
-        //对评论的 头像 和 用户名 赋值
+
         for (CommentVO commentVO : commentVOList){
+            //对评论的 头像 和 用户名 赋值
             User user = userMapper.selectById(commentVO.getUserId());
             commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
-            //在点赞表中,用户对应的数据
-            queryLike.eq(LikeCommentVideo::getIsLiked, commentVO.getId());
-            //数量>1:点赞过
-            likeCommentVideoService.count(queryLike);
-            //如果已经登录,并且对该评论已经点赞过
+
+            //查询用户对该评论的点赞情况,如果liked >0 说明用户对改评论已经点赞过
+            int isLiked = likeCommentVideoMapper.isLiked(user.getId(), commentVO.getId());
+
+            //如果对该评论已经点赞过
             try {
-                if (SecurityUtils.getUserId()!=null &&(likeCommentVideoService.count(queryLike))!=0){
+                if (isLiked > 0){
                     commentVO.setLiked(true);
                 }
             } catch (Exception ignored) {
-
+                log.info("未对评论:{}点赞",commentVO.getId());
+                commentVO.setLiked(false);
             }
-
         }
-        redisCache.setCacheList("commentVideo::"+videoId, commentVOList);
+        redisCache.deleteObject("commentVideo::"+videoId);
         return commentVOList;
     }
 
-    @Override
-    public void addLikesCount(String videoId, String CommentId) {
-
-    }
-
-    @Resource
-    private LikeCommentVideoMapper likeCommentVideoMapper;
 
     @Override
     public void addLikesCount(String commentId) {
@@ -144,10 +142,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         likeCommentVideo.setCreateAt(getCurrentTimeAsString());
         likeCommentVideo.setUpdateAt(getCurrentTimeAsString());
         likeCommentVideo.setId(RandomUtil.generateRandomNumberString());
-        //likeCommentVideoMapper.insert(likeCommentVideo);
-        //likeCommentVideoService.save(likeCommentVideo);
         likeCommentVideoService.saveLike(likeCommentVideo);
 
+
+        //刷新缓存
+        //ReloadVideoCommentRedis(commentId);
+        //删除缓存
+        redisCache.deleteObject("commentVideo::"+comment.getVideoId());
     }
 
     @Resource
@@ -188,4 +189,24 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     }
 
+    /**
+     *
+     *  根据视频id,刷新视频下的评论缓存
+     *
+    * */
+    private void ReloadVideoCommentRedis(String commentId){
+        //根据评论id,查询对应的视频id
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Comment::getId,commentId);
+        Comment comment = getOne(queryWrapper);
+        String videoId = comment.getVideoId();
+
+        List<CommentVO> commentList = getCommentList(videoId);
+
+        //删除更新前的信息
+        //redisCache.deleteObject("commentVideo::"+ videoId);
+
+        //存入更新后的信息
+        redisCache.setCacheObject("commentVideo::"+ videoId,commentList);
+    }
 }

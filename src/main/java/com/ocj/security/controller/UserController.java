@@ -48,14 +48,13 @@ public class UserController {
         log.info(avatarURL);
 
         //更新个人信息缓存
-
+        ReloadUserInfoRedis(user);
         return ResponseResult.okResult(new AvatarVO(avatarURL));
     }
 
     //TODO 获取个人信息
     @PutMapping("/userInfo")
     public ResponseResult userInfo(){
-
 
         return null;
     }
@@ -69,7 +68,6 @@ public class UserController {
         redisCache.deleteObject("login:"+ user.getId());
         //存入更新后的信息
         redisCache.setCacheObject("login:"+ user.getId(),user);
-
     }
 
 }
