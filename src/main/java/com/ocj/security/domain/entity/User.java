@@ -1,5 +1,6 @@
 package com.ocj.security.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -54,7 +55,8 @@ public class User implements Serializable {
     /**
     * 用户性别（0男，1女，2未知）
     */
-    private String sex;
+    @TableField(value = "sex")
+    private String gender;
     /**
     * 头像
     */

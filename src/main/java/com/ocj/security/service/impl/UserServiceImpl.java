@@ -67,9 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setAvatar(String userId, String avatarURL) {
-        User user = userMapper.selectById(userId);
-        user.setAvatar(avatarURL);
+    public void setAvatar(User user) {
         userMapper.updateById(user);
     }
 }

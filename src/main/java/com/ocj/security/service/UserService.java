@@ -15,5 +15,5 @@ public interface UserService {
      */
     ResponseResult register(@RequestBody RegisterRequest registerRequest);
 
-    void setAvatar(String userId, String avatarURL);
+    void setAvatar(User user);
 }
