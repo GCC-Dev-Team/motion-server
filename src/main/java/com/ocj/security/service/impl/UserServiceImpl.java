@@ -6,7 +6,7 @@ import com.ocj.security.domain.dto.RegisterRequest;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.UserService;
-import com.ocj.security.utils.CheckStringUtil;
+import com.ocj.security.utils.RegexCheckStringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("user_name",registerRequest.getUserName());
         User sqlUser = userMapper.selectOne(userQueryWrapper);
-        if(!CheckStringUtil.isUserName(registerRequest.getUserName())){
+        if(!RegexCheckStringUtil.isUserName(registerRequest.getUserName())){
             return ResponseResult.errorResult(2005,"用户名必须是英文和数字组合，不可出现其他字符");
         }
         if (sqlUser!=null){
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //情况二：邮箱重复或者邮箱名称不符合正则表达式
-        boolean emailCheck = CheckStringUtil.isEmail(registerRequest.getEmail());
+        boolean emailCheck = RegexCheckStringUtil.isEmail(registerRequest.getEmail());
         QueryWrapper<User> userQueryWrapperTwo = new QueryWrapper<>();
         userQueryWrapperTwo.eq("email",registerRequest.getEmail());
         User sqlUserTwo = userMapper.selectOne(userQueryWrapperTwo);
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //情况三，密码格式有限制
-        boolean secureString = CheckStringUtil.isSecureString(registerRequest.getPassword());
+        boolean secureString = RegexCheckStringUtil.isSecureString(registerRequest.getPassword());
         if (!secureString){
             return ResponseResult.errorResult(2003,"密码安全性低!密码包含至少一个字母、至少一个数字，并且总长度大于8位");
         }

@@ -2,10 +2,9 @@ package com.ocj.security.controller;
 
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
-import com.ocj.security.domain.dto.AddVideoRequest;
+import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.vo.CommentVO;
-import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.VideoService;
@@ -28,10 +27,11 @@ import java.util.List;
 public class VideoController {
     @Resource
     VideoService videoService;
-    @PostMapping("/addVideo")
-    public ResponseResult addVideo(MultipartFile file, @RequestBody AddVideoRequest addVideoRequest){
+    @PostMapping("/publish")
+    public ResponseResult publishVideo(MultipartFile file,String description,String categoryId,String tags ){
+        PublishVideoRequest publishVideoRequest = new PublishVideoRequest(description, categoryId, tags);
 
-        return null;
+        return videoService.publishVideo(file,publishVideoRequest);
     }
 
     /**
@@ -86,16 +86,12 @@ public class VideoController {
 
     /**
      * @param videoName
-     *
-    */
-    @GetMapping(value = "/list/search/{videoName}",produces = "text/html;charset=UTF-8")
-    public ResponseResult<List<VideoDataVO>> getVideoByName(@PathVariable String videoName,Integer currentPage,Integer pageSize){
-
+     */
+    @GetMapping(value = "/list/search")
+    public ResponseResult getVideoByName(String videoName, Integer currentPage, Integer pageSize){
 
         PageRequest pageRequest=new PageRequest(currentPage,pageSize);
-        videoService.getVideoByName(pageRequest,videoName);
-
-        return ResponseResult.okResult();
+        return ResponseResult.okResult( videoService.getVideoByName(pageRequest,videoName));
     }
 
     @GetMapping("/abc")

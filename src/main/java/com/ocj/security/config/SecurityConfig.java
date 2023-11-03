@@ -3,6 +3,8 @@ package com.ocj.security.config;
 import com.ocj.security.filter.JwtAuthenticationTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import javax.annotation.Resource;
 
@@ -47,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/account/login","/account/register","/video/addVideo","/video/one","/video/list","/video/{videoId}/comment/list").permitAll()//.anonymous()
+                .antMatchers("/account/login","/account/register","/video/addVideo","/video/one","/video/list","/video/{videoId}/comment/list","/video/list/search").permitAll()//.anonymous()
                 .anyRequest().fullyAuthenticated();
 
 
@@ -73,4 +76,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+//
+//    @Bean
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    public CharacterEncodingFilter characterEncodingFilter() {
+//        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+//        filter.setEncoding("UTF-8");
+//        filter.setForceEncoding(true);
+//        return filter;
+//    }
 }

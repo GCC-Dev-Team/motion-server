@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.*;
 import com.ocj.security.domain.vo.*;
+import com.ocj.security.enums.AppHttpCodeEnum;
+import com.ocj.security.enums.OperationEnum;
 import com.ocj.security.mapper.CategoryMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
@@ -15,6 +19,10 @@ import com.ocj.security.service.FileService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.utils.RandomUtil;
+import com.ocj.security.utils.RegexCheckStringUtil;
+import com.ocj.security.utils.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +31,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author L
@@ -48,6 +56,68 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
 
     @Resource
     VideoCoverMapper videoCoverMapper;
+    @Resource
+    QinuConfig qinuConfig;
+
+    private static final Logger log = LoggerFactory.getLogger(VideoServiceImpl.class);
+
+
+
+    @Override
+    public ResponseResult publishVideo(MultipartFile file, PublishVideoRequest publishVideoRequest) {
+
+        String tags = publishVideoRequest.getTags();
+        String description = publishVideoRequest.getDescription();
+        if (!RegexCheckStringUtil.checkStringLength(description, 3, 80)) {
+            return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR, "描述字符超出80");
+        }
+        User user = SecurityUtils.getLoginUser().getUser();
+
+        Video video = new Video();
+        String videoId = RandomUtil.generateRandomString(16);
+        video.setVideoId(videoId);
+        video.setTags(tags);
+        String domain = qinuConfig.getDomain();
+        String fileUrl = fileService.uploadFile(file, "video/" + videoId);
+        video.setUrl(fileUrl);
+        video.setAddress(fileUrl.substring(domain.length() + 1));
+        video.setStatus(1);
+        video.setViews(0L);
+        video.setLikeCount(0L);
+        video.setDescription(description);
+        video.setCategoryId(publishVideoRequest.getCategoryId());
+        video.setPublisher(user.getId());
+
+        Boolean processFile = fileService.processFile(video.getAddress(), OperationEnum.Video_Screenshot.getOperationOrder(), "videoCover/" + videoId + ".jpg");
+
+        if (processFile.equals(Boolean.FALSE)) {
+            return ResponseResult.errorResult(500, "视频截图处理失败!");
+        }
+        VideoCover videoCover = new VideoCover();
+        videoCover.setVideoId(videoId);
+        videoCover.setCoverAddress("videoCover/" + videoId + ".jpg");
+        videoCover.setVideoCoverUrl(domain + "/" + videoCover.getCoverAddress());
+        //这个是视频
+        String videoCoverUrl = videoCover.getVideoCoverUrl();
+
+        //TODO 优化，这个要睡觉，不行
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        CoverVO coverVO=fileService.urlGetPhotoImage(videoCoverUrl);
+
+        videoCover.setWidth(coverVO.getWidth());
+        videoCover.setHeight(coverVO.getHeight());
+//
+//
+        videoMapper.insert(video);
+        videoCoverMapper.insert(videoCover);
+
+        return ResponseResult.okResult(video.getUrl());
+    }
+
     @Override
     public List<VideoDataVO> getVideoList() {
         List<String> lies = videoMapper.randVideoList();
@@ -61,7 +131,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     }
 
     @Override
-    public ResponseResult addVideo(MultipartFile file) {
+    public ResponseResult publishVideo(MultipartFile file) {
 
 
         String videoId = "video" + RandomUtil.generateRandomString(16);
@@ -88,7 +158,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return ResponseResult.okResult(fileAddress);
     }
 
-    public VideoDataVO videoToVideoDataVO(Video video){
+    public VideoDataVO videoToVideoDataVO(Video video) {
 
         VideoDataVO videoDataVO = new VideoDataVO();
 
@@ -122,6 +192,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         return videoDataVO;
 
     }
+
     @Override
     public VideoDataVO getVideoDataById(String videoId) {
 
@@ -131,29 +202,22 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     }
 
     @Override
-    public PageVO getVideoByName(PageRequest pageRequest,String videoName) {
-        Page<Video> objectPage = new Page<>(pageRequest.getCurrentPage(), pageRequest.getPageSize());
+    public PageVO getVideoByName(PageRequest pageRequest, String videoName) {
 
         QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+        videoQueryWrapper.like("tags", videoName).or().like("description", videoName);
 
-        Page<Video> videoPage = videoMapper.selectPage(objectPage, videoQueryWrapper);
-
+        Page<Video> videoPage = videoMapper.selectPage(new Page<>(pageRequest.getCurrentPage(), pageRequest.getPageSize()), videoQueryWrapper);
 
         List<Video> records = videoPage.getRecords();
 
         List<VideoDataVO> videoDataVOS = new ArrayList<>();
         //筛选records,并且迭代赋值
-        for (Video video : records.stream()
-                .filter(record -> record.getDescription().contains(videoName))
-                .collect(Collectors.toList())) {
+        for (Video video : records) {
             videoDataVOS.add(videoToVideoDataVO(video));
         }
 
-        return new PageVO(videoDataVOS, videoPage.getTotal()
-                , videoPage.getSize()
-                , videoPage.getCurrent());
-
-        //TODO 先筛选再分页??
+        return new PageVO(videoDataVOS, videoPage.getTotal(), videoPage.getSize(), videoPage.getCurrent());
     }
 
 

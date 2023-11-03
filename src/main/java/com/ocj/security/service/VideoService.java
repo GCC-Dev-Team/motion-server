@@ -1,11 +1,13 @@
 package com.ocj.security.service;
 
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
 import com.ocj.security.domain.entity.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ocj.security.domain.vo.PageVO;
 import com.ocj.security.domain.vo.VideoDataVO;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,10 +20,10 @@ import java.util.List;
 public interface VideoService extends IService<Video> {
 
     //上传视频
-    ResponseResult addVideo(MultipartFile file);
+    ResponseResult publishVideo(MultipartFile file);
 
 
-
+    ResponseResult publishVideo(MultipartFile file, @RequestBody PublishVideoRequest publishVideoRequest) ;
 //    获取视频列表(随机)
     List<VideoDataVO> getVideoList();
 

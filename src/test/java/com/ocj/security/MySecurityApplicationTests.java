@@ -2,11 +2,14 @@ package com.ocj.security;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.config.QinuConfig;
 import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.entity.VideoCover;
 import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.domain.vo.VideoDataVO;
+import com.ocj.security.enums.OperationEnum;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.service.FileService;
@@ -167,6 +170,42 @@ class MySecurityApplicationTests {
 //
 //            System.out.println("ok");
 //        }
+    }
+
+    @Test
+    void testPageLikeVideo(){
+//        Page<Video> objectPage = new Page<>(1, 10);
+//
+//       String videoName="测试";
+//        QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+//        videoQueryWrapper.like("tags",videoName).or().like("description",videoName);
+//
+//        Page<Video> videoPage = videoMapper.selectPage(objectPage, videoQueryWrapper);
+//
+//
+//        List<Video> records = videoPage.getRecords();
+//
+//        System.out.println(records.size());
+//        long total = videoPage.getTotal();
+//        System.out.println(total);
+    }
+    @Test
+    void testFile(){
+        String url="http://s36fh9xu3.hn-bkt.clouddn.com/videoCover/cecf27b09a594777.jpg";
+        System.out.println(fileService.urlGetPhotoImage(url).toString());
+
+        Integer height = fileService.urlGetPhotoImage(url).getHeight();
+        Integer width = fileService.urlGetPhotoImage(url).getWidth();
+        VideoCover videoCover = new VideoCover();
+        videoCover.setWidth(width);
+        videoCover.setHeight(height);
+//        String url="http://s36fh9xu3.hn-bkt.clouddn.com//videoCover/aa4ca052485b4934.jpg";
+////
+//        fileService.urlGetPhotoImage(url);
+//        String domain= qinuConfig.getDomain();
+//        System.out.println(url.substring(domain.length()+1));
+//        Boolean b = fileService.processFile("video/aa4ca052485b4934.mp4", OperationEnum.Video_Screenshot.getOperationOrder(), "videoCover/aa4ca052485b4934.jpg");
+//        System.out.println(b);
     }
 
 }

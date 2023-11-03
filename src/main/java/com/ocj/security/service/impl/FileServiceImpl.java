@@ -17,6 +17,8 @@ import com.qiniu.util.Auth;
 
 import com.qiniu.util.StringMap;
 import com.qiniu.util.UrlSafeBase64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,7 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 
@@ -31,6 +34,7 @@ import java.net.URL;
 public class FileServiceImpl implements FileService {
     @Resource
     QiniuApiService qiniuApiService;
+    private static final Logger log = LoggerFactory.getLogger(FileServiceImpl.class);
 
 
     /**
@@ -61,7 +65,9 @@ public class FileServiceImpl implements FileService {
     public CoverVO urlGetPhotoImage(String imageUrl) {
 
         try {
+            System.out.println(imageUrl);
             URL url = new URL(imageUrl);
+            InputStream inputStream = url.openStream();
             BufferedImage image = ImageIO.read(url);
 
             if (image != null) {
@@ -70,12 +76,15 @@ public class FileServiceImpl implements FileService {
 
                 return new CoverVO(imageUrl, width, height);
             } else {
-                System.out.println("无法读取图像");
+                log.info("无法读取图像");
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+
+
     }
+
 }
