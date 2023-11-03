@@ -4,10 +4,12 @@ import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.AddCommentRequest;
 import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.dto.PageRequest;
+import com.ocj.security.domain.vo.CommentDataVO;
 import com.ocj.security.domain.vo.CommentVO;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.service.CommentService;
 import com.ocj.security.service.VideoService;
+import com.ocj.security.utils.BeanCopyUtils;
 import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -64,13 +66,15 @@ public class VideoController {
     }
 
     @GetMapping("/{videoId}/comment/list")
-    @Cacheable(value = "commentVideo",key = "#videoId")
-    public ResponseResult getComment(@PathVariable String videoId){
+    @Cacheable(value = "commentDataVO",key = "#videoId")
+    public ResponseResult<CommentDataVO> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList = new ArrayList<>();
         try {
             //尝试获取评论
             commentVOList = commentService.getCommentList(videoId);
-            return ResponseResult.okResult(commentVOList);
+
+            CommentDataVO commentDataVO = new CommentDataVO(commentService.getCommentCount(videoId), commentVOList);
+            return ResponseResult.okResult(commentDataVO);
         } catch (Exception e) {
             //获取失败:无评论
             return ResponseResult.okResult(commentVOList);

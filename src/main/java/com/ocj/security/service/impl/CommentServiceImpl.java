@@ -76,7 +76,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         save(comment);
 
-        redisCache.deleteObject("commentVideo::"+videoId);
+        redisCache.deleteObject("commentDataVO::"+videoId);
 
         return AppHttpCodeEnum.SUCCESS;
     }
@@ -121,7 +121,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 commentVO.setLiked(false);
             }
         }
-        redisCache.deleteObject("commentVideo::"+videoId);
+        redisCache.deleteObject("commentDataVO::"+videoId);
         return commentVOList;
     }
 
@@ -148,7 +148,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //刷新缓存
         //ReloadVideoCommentRedis(commentId);
         //删除缓存
-        redisCache.deleteObject("commentVideo::"+comment.getVideoId());
+        redisCache.deleteObject("commentDataVO::"+comment.getVideoId());
     }
 
     @Resource
@@ -207,6 +207,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //redisCache.deleteObject("commentVideo::"+ videoId);
 
         //存入更新后的信息
-        redisCache.setCacheObject("commentVideo::"+ videoId,commentList);
+        redisCache.setCacheObject("commentDataVO::"+ videoId,commentList);
     }
 }
