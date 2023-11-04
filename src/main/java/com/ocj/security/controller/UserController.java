@@ -2,6 +2,7 @@ package com.ocj.security.controller;
 
 
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.domain.entity.LoginUser;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.AvatarVO;
 import com.ocj.security.service.QiniuApiService;
@@ -67,10 +68,10 @@ public class UserController {
      *
     **/
     private void ReloadUserInfoRedis(User user){
-        //删除更新前的信息
-        redisCache.deleteObject("login:"+ user.getId());
         //存入更新后的信息
-        redisCache.setCacheObject("login:"+ user.getId(),user);
+        LoginUser loginUser = redisCache.getCacheObject("login:" + user.getId());
+        loginUser.setUser(user);
+        redisCache.setCacheObject("login:"+ user.getId(),loginUser);
     }
 
 }
