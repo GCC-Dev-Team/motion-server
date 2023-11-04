@@ -10,6 +10,7 @@ import com.ocj.security.domain.entity.VideoCover;
 import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.enums.OperationEnum;
+import com.ocj.security.enums.RegexOrderEnum;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.service.FileService;
@@ -17,6 +18,7 @@ import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.VideoService;
 import com.ocj.security.utils.BeanCopyUtils;
 import com.ocj.security.utils.FileToMultipartFileConverter;
+import com.ocj.security.utils.RegexCheckStringUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.processing.OperationManager;
@@ -43,10 +45,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @Slf4j
@@ -218,7 +218,20 @@ class MySecurityApplicationTests {
 
 //        Page<Video> videoPage = videoMapper.selectPage(new Page<>(1,10),
 //                null);
-//        System.out.println(videoPage.getSize());
+////        System.out.println(videoPage.getSize());
+//        ArrayList<String> tag = new ArrayList<>();
+//        tag.add("ui");
+//        tag.add("#kwo");
+//        tag.add("+ko");
+//        tag.add("uahi");
+//        System.out.println(tag.size());
+//        List<String> collect = tag.stream().filter(p -> !p.contains("#")).collect(Collectors.toList());
+//        System.out.println(collect);
+
+        String str="汽车";
+        boolean check = RegexCheckStringUtil.regexCheck(str, RegexOrderEnum.Tag_Regex)&&
+                RegexCheckStringUtil.checkStringLength(str,1,6);
+        System.out.println(check);
     }
 
 }

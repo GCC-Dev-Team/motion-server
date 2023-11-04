@@ -10,6 +10,7 @@ import com.ocj.security.domain.entity.*;
 import com.ocj.security.domain.vo.*;
 import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.enums.OperationEnum;
+import com.ocj.security.enums.RegexOrderEnum;
 import com.ocj.security.mapper.CategoryMapper;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author L
@@ -179,20 +181,41 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         Page page = new Page(currentPage, pageSize);
         QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
         videoQueryWrapper.eq("status", 1);
-        System.out.println(categoryId);
 
 
         if (search != null) {
-            videoQueryWrapper.like("description", search);
+            boolean check = RegexCheckStringUtil.regexCheck(search, RegexOrderEnum.Tag_Regex)&&
+                    RegexCheckStringUtil.checkStringLength(search,0,8);
+
+            if (check){
+                videoQueryWrapper.like("description", search);
+            }
         }
+
         if (categoryId != null) {
-            videoQueryWrapper.eq("category_id", categoryId);
+
+            int number = Integer.parseInt(categoryId);
+
+            if (number >= 1 && number <= 8){
+                videoQueryWrapper.eq("category_id", categoryId);
+            }
         }
-//       if (tag != null) {
-//
-//           videoQueryWrapper.like("", Arrays.stream(tag))
-//
-//        }
+
+        if (tag != null) {
+            //筛选了不包含#的标签
+            StringBuilder tags=new StringBuilder();
+            for (String str: tag){
+                boolean check = RegexCheckStringUtil.regexCheck(str, RegexOrderEnum.Tag_Regex)&&
+                        RegexCheckStringUtil.checkStringLength(str,1,6);
+               //符合中英文和数字的
+                if (check){
+                    tags.append("#"+str);
+                }
+            }
+
+            videoQueryWrapper.like("tags", tags.toString());
+        }
+
         return ResponseResult.okResult(getVideoList(page, videoQueryWrapper));
     }
 }
