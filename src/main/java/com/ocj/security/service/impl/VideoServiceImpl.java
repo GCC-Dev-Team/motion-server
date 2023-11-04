@@ -147,7 +147,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         videoDataVO.setUpdateAt(video.getUpdateTime());
 
         return videoDataVO;
-
     }
 
     @Override
@@ -180,7 +179,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     public ResponseResult getVideoList(Integer currentPage, Integer pageSize, String search, String categoryId, String[] tag) {
         Page page = new Page(currentPage, pageSize);
         QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
-        videoQueryWrapper.eq("status", 1);
+        videoQueryWrapper.eq("status", 1).orderByDesc("create_time");
 
 
         if (search != null) {
@@ -217,6 +216,65 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         }
 
         return ResponseResult.okResult(getVideoList(page, videoQueryWrapper));
+    }
+
+    @Override
+    public ResponseResult getCategory() {
+
+
+        List<Category> categories = categoryMapper.selectList(null);
+
+        List<CategoryVO> categoryVOS=new ArrayList<>();
+        for (Category category:categories){
+
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category,categoryVO);
+
+            categoryVOS.add(categoryVO);
+        }
+
+        return ResponseResult.okResult(categoryVOS);
+    }
+
+
+    @Override
+    public ResponseResult previous(String videoId) {
+        QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+        videoQueryWrapper.eq("status", 1).orderByDesc("create_time");
+
+        List<Video> videos = videoMapper.selectList(videoQueryWrapper);
+        int temple=0;
+        for (Video video:videos){
+
+            if (video.getVideoId().equals(videoId)){
+                break;
+            }
+            temple=temple+1;
+        }
+        if (temple==0){
+            return ResponseResult.okResult(videos.get(videos.size()-1).getVideoId());
+        }
+        return ResponseResult.okResult(videos.get(temple+1).getVideoId());
+    }
+
+    @Override
+    public ResponseResult next(String videoId) {
+        QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
+        videoQueryWrapper.eq("status", 1).orderByAsc("create_time");
+
+        List<Video> videos = videoMapper.selectList(videoQueryWrapper);
+        int temple=0;
+        for (Video video:videos){
+
+            if (video.getVideoId().equals(videoId)){
+                break;
+            }
+            temple=temple+1;
+        }
+        if (temple==0){
+            return ResponseResult.okResult(videos.get(videos.size()-1).getVideoId());
+        }
+        return ResponseResult.okResult(videos.get(temple-1).getVideoId());
     }
 }
 

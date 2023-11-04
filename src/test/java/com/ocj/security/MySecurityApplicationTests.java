@@ -228,10 +228,10 @@ class MySecurityApplicationTests {
 //        List<String> collect = tag.stream().filter(p -> !p.contains("#")).collect(Collectors.toList());
 //        System.out.println(collect);
 
-        String str="汽车";
-        boolean check = RegexCheckStringUtil.regexCheck(str, RegexOrderEnum.Tag_Regex)&&
-                RegexCheckStringUtil.checkStringLength(str,1,6);
-        System.out.println(check);
+//        String str="汽车";
+//        boolean check = RegexCheckStringUtil.regexCheck(str, RegexOrderEnum.Tag_Regex)&&
+//                RegexCheckStringUtil.checkStringLength(str,1,6);
+//        System.out.println(check);
     }
 
 }

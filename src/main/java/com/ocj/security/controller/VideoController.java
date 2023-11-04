@@ -86,15 +86,35 @@ public class VideoController {
         return ResponseResult.okResult();
     }
 
+    @GetMapping("/category")
+    public ResponseResult getCategory(){
+        return videoService.getCategory();
+    }
 
 
-//    @GetMapping(value = "/abc/{userid}",produces = "application/json; charset=utf-8")
-//    public String testABC(@PathVariable String userid){
-//
-//        System.out.println(userid);
-//        return "hello kizuna"+userid;
-//    }
+    /**
+     * 当前的视频id查看上一个视频id
+     * @param videoId
+     * @return
+     */
+    @GetMapping(value = "/previous/{videoId}",produces = "application/json; charset=utf-8")
+    public ResponseResult previous(@PathVariable String videoId){
 
+        return videoService.previous(videoId);
+    }
+
+
+    /**
+     * 当前的视频id查看下一个视频id
+     * @param videoId
+     * @return
+     */
+
+    @GetMapping(value = "/next/{videoId}",produces = "application/json; charset=utf-8")
+    public ResponseResult next(@PathVariable String videoId){
+
+        return videoService.next(videoId);
+    }
 
 
 

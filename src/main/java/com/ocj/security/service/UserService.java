@@ -16,4 +16,8 @@ public interface UserService {
     ResponseResult register(@RequestBody RegisterRequest registerRequest);
 
     void setAvatar(User user);
+
+    ResponseResult userInfo();
+
+
 }

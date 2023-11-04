@@ -5,6 +5,7 @@ import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.entity.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ocj.security.domain.vo.VideoDataVO;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,5 +27,14 @@ public interface VideoService extends IService<Video> {
 
     ////获取视频详细信息(给前端的)（根据videoId，返回DataVO）
     VideoDataVO getVideoDataById(String videoId);
+
+    /**
+     * 获取分类
+     * @return
+     */
+    ResponseResult getCategory();
+
+    ResponseResult previous(String videoId);
+    ResponseResult next(String videoId);
 
 }

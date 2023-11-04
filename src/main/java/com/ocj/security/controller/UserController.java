@@ -52,11 +52,14 @@ public class UserController {
         return ResponseResult.okResult(new AvatarVO(avatarURL));
     }
 
-    //TODO 获取个人信息
-    @PutMapping("/userInfo")
+    /**
+     * 获取用户信息
+     * @return
+     */
+    @GetMapping("/userInfo")
     public ResponseResult userInfo(){
 
-        return null;
+        return userService.userInfo();
     }
 
     /**

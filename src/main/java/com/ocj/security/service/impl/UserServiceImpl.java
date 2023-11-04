@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.dto.RegisterRequest;
 import com.ocj.security.domain.entity.User;
+import com.ocj.security.domain.vo.UserInfoDataVO;
+import com.ocj.security.domain.vo.UserInfoVO;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.UserService;
 import com.ocj.security.utils.RegexCheckStringUtil;
+import com.ocj.security.utils.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,5 +72,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setAvatar(User user) {
         userMapper.updateById(user);
+    }
+
+    @Override
+    public ResponseResult userInfo() {
+        User user = SecurityUtils.getLoginUser().getUser();
+
+        UserInfoDataVO userInfoDataVO = new UserInfoDataVO();
+        BeanUtils.copyProperties(user,userInfoDataVO);
+
+        return ResponseResult.okResult(userInfoDataVO);
     }
 }

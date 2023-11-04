@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class userInfoDataVO {
+public class UserInfoDataVO {
 
     private String userName;
 
@@ -15,8 +15,6 @@ public class userInfoDataVO {
 
     private String avatar;
 
-    private String gender;
-
-
+//    private String gender;
 
 }
