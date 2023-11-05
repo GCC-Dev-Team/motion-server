@@ -13,6 +13,7 @@ import com.ocj.security.service.VideoService;
 import com.qiniu.common.QiniuException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public class VideoController {
     @Resource
     VideoService videoService;
     @PostMapping("/publish")
+    @Transactional
     public ResponseResult publishVideo(MultipartFile file,String description,String categoryId,String tags ){
         PublishVideoRequest publishVideoRequest = new PublishVideoRequest(description, categoryId, tags);
 
@@ -38,6 +40,7 @@ public class VideoController {
 
 
 
+    @Transactional
     @GetMapping(value = "/list",produces = "application/json; charset=utf-8")
     public ResponseResult getVideoList(@RequestParam("currentPage") Integer currentPage, @RequestParam("pageSize") Integer pageSize, String search, String categoryId, String [] tag){
 
@@ -50,6 +53,7 @@ public class VideoController {
      * @param videoId
      * @return
      */
+    @Transactional
     @GetMapping("/one")
     public ResponseResult getVideoById(String videoId){
 
@@ -59,12 +63,14 @@ public class VideoController {
     @Resource
     CommentService commentService;
     @PostMapping("/{videoId}/comment")
+    @Transactional
     public ResponseResult<AppHttpCodeEnum> addComment(@PathVariable String videoId, @RequestBody AddCommentRequest addCommentRequest) throws QiniuException {
         AppHttpCodeEnum appHttpCodeEnumEnum = commentService.addComment(videoId, addCommentRequest.getContent());
         return ResponseResult.errorResult(appHttpCodeEnumEnum);
     }
 
     @GetMapping("/{videoId}/comment/list")
+    @Transactional
     @Cacheable(value = "commentDataVO",key = "#videoId")
     public ResponseResult<CommentDataVO> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList = new ArrayList<>();
@@ -81,12 +87,14 @@ public class VideoController {
     }
 
     @PostMapping ("/comment/{commentId}/like")
+    @Transactional
     public ResponseResult addLikesCount(@PathVariable String commentId){
         commentService.addLikesCount(commentId);
         return ResponseResult.okResult();
     }
 
     @GetMapping("/category")
+    @Transactional
     public ResponseResult getCategory(){
         return videoService.getCategory();
     }
@@ -97,6 +105,7 @@ public class VideoController {
      * @param videoId
      * @return
      */
+    @Transactional
     @GetMapping(value = "/previous/{videoId}",produces = "application/json; charset=utf-8")
     public ResponseResult previous(@PathVariable String videoId){
 
@@ -109,7 +118,7 @@ public class VideoController {
      * @param videoId
      * @return
      */
-
+    @Transactional
     @GetMapping(value = "/next/{videoId}",produces = "application/json; charset=utf-8")
     public ResponseResult next(@PathVariable String videoId){
 

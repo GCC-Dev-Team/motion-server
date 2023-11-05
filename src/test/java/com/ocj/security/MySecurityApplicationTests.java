@@ -5,14 +5,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.entity.VideoCover;
 import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.domain.vo.VideoDataVO;
 import com.ocj.security.enums.OperationEnum;
 import com.ocj.security.enums.RegexOrderEnum;
+import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
+import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.VideoService;
@@ -27,11 +30,11 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-import com.qiniu.util.StringUtils;
 import com.qiniu.util.UrlSafeBase64;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -210,6 +213,10 @@ class MySecurityApplicationTests {
 //        System.out.println(b);
     }
 
+    @Resource
+    CommentService commentService;
+    @Resource
+    LikeCommentVideoMapper likeCommentVideoMapper;
     @Test
     public void enco() throws UnsupportedEncodingException {
 //        // 参数一：要编码的字符串 参数二：指定字符集
@@ -232,6 +239,18 @@ class MySecurityApplicationTests {
 //        boolean check = RegexCheckStringUtil.regexCheck(str, RegexOrderEnum.Tag_Regex)&&
 //                RegexCheckStringUtil.checkStringLength(str,1,6);
 //        System.out.println(check);
+        //System.out.println(commentService.getCommentCount("video01f9f89c030a41b9"));
+
+       // System.out.println(videoService.getVideoDataById("video01f9f89c030a41b9").toString());
+//        QueryWrapper<LikeCommentVideo> wrapper = new QueryWrapper<LikeCommentVideo>().eq("user_id", "3413c310-f4ae-43fd65").eq("is_liked", "5774798523901742");
+//        System.out.println(likeCommentVideoMapper.selectOne(wrapper));
+//        String clickLike="null";
+//        System.out.println(StringUtils.hasText(clickLike));
+
+        Long te=90L;
+        int c=1;
+        te=te+c;
+        System.out.println(te);
     }
 
 }

@@ -3,9 +3,9 @@ package com.ocj.security.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.Comment;
 import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.User;
@@ -32,7 +32,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.ocj.security.enums.AppHttpCodeEnum.CONTEXT_NOT_NULL;
-import static com.ocj.security.enums.AppHttpCodeEnum.NEED_LOGIN;
 import static com.ocj.security.utils.CurrentTimeUtil.getCurrentTimeAsString;
 
 
@@ -128,21 +127,35 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public void addLikesCount(String commentId) {
+
+        String userId = SecurityUtils.getUserId();
+        //null 为false，表示没有点赞，点了的有记录值
+        String clickLike = clickLike(commentId, userId);
+
+        int temple=0;
+        if (StringUtils.hasText(clickLike)){
+            likeCommentVideoMapper.deleteById(clickLike);
+            temple=-1;
+        }else {
+            //没有点赞的,现在增加记录
+            //save Like
+            LikeCommentVideo likeCommentVideo = new LikeCommentVideo();
+            likeCommentVideo.setUserId(userId);
+            likeCommentVideo.setIsLiked(commentId);
+            likeCommentVideo.setCreateAt(getCurrentTimeAsString());
+            likeCommentVideo.setUpdateAt(getCurrentTimeAsString());
+            likeCommentVideo.setId(RandomUtil.generateRandomNumberString());
+            likeCommentVideoService.saveLike(likeCommentVideo);
+            temple=1;
+        }
+
+
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getId,commentId);
         Comment comment = getOne(queryWrapper);
         Long likes = comment.getLikeCount();
-        comment.setLikeCount(  ++likes  );
+        comment.setLikeCount(likes+temple);
         updateById(comment);
-
-        LikeCommentVideo likeCommentVideo = new LikeCommentVideo();
-
-        likeCommentVideo.setUserId(SecurityUtils.getUserId());
-        likeCommentVideo.setIsLiked(commentId);
-        likeCommentVideo.setCreateAt(getCurrentTimeAsString());
-        likeCommentVideo.setUpdateAt(getCurrentTimeAsString());
-        likeCommentVideo.setId(RandomUtil.generateRandomNumberString());
-        likeCommentVideoService.saveLike(likeCommentVideo);
 
 
         //刷新缓存
@@ -209,4 +222,25 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         //存入更新后的信息
         redisCache.setCacheObject("commentDataVO::"+ videoId,commentList);
     }
+
+    /**
+     * 有点赞返回(记录id)，没有点赞返回null
+     *
+     * @param commentId
+     * @param userId
+     * @return
+     */
+    private String clickLike(String commentId, String userId){
+
+        QueryWrapper<LikeCommentVideo> wrapper = new QueryWrapper<LikeCommentVideo>().eq("user_id", userId).eq("is_liked", commentId);
+        LikeCommentVideo likeCommentVideo = likeCommentVideoMapper.selectOne(wrapper);
+
+        //没有点赞的
+        if (likeCommentVideo ==null){
+            return null;
+        }
+
+        return likeCommentVideo.getId();
+    }
+
 }

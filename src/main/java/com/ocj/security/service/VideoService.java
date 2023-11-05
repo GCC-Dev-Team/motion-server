@@ -37,4 +37,5 @@ public interface VideoService extends IService<Video> {
     ResponseResult previous(String videoId);
     ResponseResult next(String videoId);
 
+
 }

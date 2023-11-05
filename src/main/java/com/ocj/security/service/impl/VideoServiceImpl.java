@@ -23,6 +23,7 @@ import com.ocj.security.utils.RegexCheckStringUtil;
 import com.ocj.security.utils.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -59,6 +60,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     QinuConfig qinuConfig;
 
 
+    @Transactional
     @Override
     public ResponseResult publishVideo(MultipartFile file, PublishVideoRequest publishVideoRequest) {
 
@@ -108,8 +110,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         videoCover.setHeight(coverVO.getHeight());
 //
 //
-        videoMapper.insert(video);
-        videoCoverMapper.insert(videoCover);
+//        videoMapper.insert(video);
+//        videoCoverMapper.insert(videoCover);
 
         return ResponseResult.okResult(video.getUrl());
     }
@@ -254,13 +256,13 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         if (temple==0){
             return ResponseResult.okResult(videos.get(videos.size()-1).getVideoId());
         }
-        return ResponseResult.okResult(videos.get(temple+1).getVideoId());
+        return ResponseResult.okResult(videos.get(temple-1).getVideoId());
     }
 
     @Override
     public ResponseResult next(String videoId) {
         QueryWrapper<Video> videoQueryWrapper = new QueryWrapper<>();
-        videoQueryWrapper.eq("status", 1).orderByAsc("create_time");
+        videoQueryWrapper.eq("status", 1).orderByDesc("create_time");
 
         List<Video> videos = videoMapper.selectList(videoQueryWrapper);
         int temple=0;
@@ -271,11 +273,13 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
             }
             temple=temple+1;
         }
-        if (temple==0){
-            return ResponseResult.okResult(videos.get(videos.size()-1).getVideoId());
+        if (temple==videos.size()-1){
+            return ResponseResult.okResult(videos.get(0).getVideoId());
         }
-        return ResponseResult.okResult(videos.get(temple-1).getVideoId());
+        return ResponseResult.okResult(videos.get(temple+1).getVideoId());
     }
+
+
 }
 
 

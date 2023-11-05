@@ -12,6 +12,7 @@ import com.ocj.security.utils.SecurityUtils;
 import com.qiniu.rtc.model.RoomResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,7 @@ public class UserController {
      * 上传头像
      */
     @PostMapping("/avatar")
+    @Transactional
     public ResponseResult uploadFile(MultipartFile file){
         //获取原始文件名
         String originalFilename = file.getOriginalFilename();
@@ -58,6 +60,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/userInfo")
+    @Transactional
     public ResponseResult userInfo(){
 
         return userService.userInfo();
@@ -67,6 +70,7 @@ public class UserController {
      * 更新用户信息后,刷新用户信息缓存
      *
     **/
+
     private void ReloadUserInfoRedis(User user){
         //存入更新后的信息
         LoginUser loginUser = redisCache.getCacheObject("login:" + user.getId());

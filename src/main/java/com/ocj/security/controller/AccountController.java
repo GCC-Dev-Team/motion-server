@@ -7,6 +7,7 @@ import com.ocj.security.service.LoginService;
 import com.ocj.security.service.UserService;
 import org.springframework.http.HttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,28 +25,24 @@ public class AccountController {
     UserService userService;
 
     @PostMapping("/login")
+    @Transactional
     public ResponseResult login(@RequestBody LoginRequest loginRequest){
 
         return loginService.login(loginRequest);
     }
 
+    @Transactional
     @PostMapping("/register")
-    ResponseResult register(@RequestBody RegisterRequest registerRequest){
+    public ResponseResult register(@RequestBody RegisterRequest registerRequest){
 
         return userService.register(registerRequest);
     }
 
     @PostMapping("/logout")
+    @Transactional
     //@PreAuthorize("hasAuthority('test')")
     public ResponseResult logOut(){
         return loginService.logout();
     }
-
-//    @PostMapping("/hello")
-//    //@PreAuthorize("hasAuthority('test')")
-//    public String sayHello(){
-//
-//        return "hello*** world";
-//    }
 
 }
