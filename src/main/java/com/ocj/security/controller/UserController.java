@@ -59,7 +59,7 @@ public class UserController {
      * 获取用户信息
      * @return
      */
-    @GetMapping("/userInfo")
+    @GetMapping("/info")
     @Transactional
     public ResponseResult userInfo(){
 

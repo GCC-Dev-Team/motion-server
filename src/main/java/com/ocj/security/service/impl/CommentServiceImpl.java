@@ -24,7 +24,10 @@ import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RedisCache;
 import com.ocj.security.utils.SecurityUtils;
 import com.qiniu.common.QiniuException;
+import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -107,8 +110,14 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentVO.setUserName(user.getUserName());
             commentVO.setAvatar(user.getAvatar());
 
-            //查询用户对该评论的点赞情况,如果liked >0 说明用户对改评论已经点赞过
-            int isLiked = likeCommentVideoMapper.isLiked(user.getId(), commentVO.getId());
+            int isLiked=0;
+            try {
+                //如果查看评论的用户已经登录
+
+                isLiked= likeCommentVideoMapper.isLiked(SecurityUtils.getUserId(), commentVO.getId());
+            }catch (Exception ignored){
+                log.info("用户未登录");
+            }
 
             //如果对该评论已经点赞过
             try {

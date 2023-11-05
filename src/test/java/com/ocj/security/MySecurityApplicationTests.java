@@ -247,10 +247,7 @@ class MySecurityApplicationTests {
 //        String clickLike="null";
 //        System.out.println(StringUtils.hasText(clickLike));
 
-        Long te=90L;
-        int c=1;
-        te=te+c;
-        System.out.println(te);
+        System.out.println(likeCommentVideoMapper.isLiked("b2218631-d51f-4c28-a575-941fba921b0b", "6222401340071668"));
     }
 
 }
