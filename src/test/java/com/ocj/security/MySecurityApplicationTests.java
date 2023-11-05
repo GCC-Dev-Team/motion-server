@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.entity.LikeCommentVideo;
 import com.ocj.security.domain.entity.Video;
 import com.ocj.security.domain.entity.VideoCover;
@@ -247,7 +248,58 @@ class MySecurityApplicationTests {
 //        String clickLike="null";
 //        System.out.println(StringUtils.hasText(clickLike));
 
-        System.out.println(likeCommentVideoMapper.isLiked("b2218631-d51f-4c28-a575-941fba921b0b", "6222401340071668"));
+       // System.out.println(likeCommentVideoMapper.isLiked("b2218631-d51f-4c28-a575-941fba921b0b", "6222401340071668"));
+    }
+
+    @Test
+    void testFi() throws IOException {
+//        // 指定文件夹路径
+//        String folderPath = "D://抖音视频/私密";
+//
+//        // 创建 File 对象
+//        File folder = new File(folderPath);
+//
+//        // 检查文件夹是否存在
+//        if (folder.exists() && folder.isDirectory()) {
+//            // 获取文件夹中的所有文件
+//            File[] files = folder.listFiles();
+//
+//            // 遍历文件列表并获取文件名
+//            for (File file : files) {
+//                if (file.isFile()) {
+//                    String fileName = file.getName();
+//                    // 去掉文件名末尾的 .mp4
+//                    if (fileName.endsWith(".mp4")) {
+//                        fileName = fileName.substring(0, fileName.length() - 4);
+//                    }
+//                    System.out.println("文件名: " + fileName);
+//
+//                    MultipartFile multipartFile = FileToMultipartFileConverter.convertFileToMultipartFile(file);
+//
+//                    videoService.publishVideo(multipartFile,new PublishVideoRequest(fileName,"2","#喜欢"));
+//                }
+//            }
+//        } else {
+//            System.err.println("指定的路径不是一个有效的文件夹。");
+//        }
+
+
+    }
+
+    @Test
+    void Update(){
+//        List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
+//
+//        for (VideoCover videoCover:videoCovers){
+//            CoverVO coverVO = fileService.urlGetPhotoImage(videoCover.getVideoCoverUrl());
+//
+//            videoCover.setHeight(coverVO.getHeight());
+//            videoCover.setWidth(coverVO.getWidth());
+//
+//             videoCoverMapper.updateById(videoCover);
+//        }
+//
+//        System.out.println(videoCovers.size());
     }
 
 }

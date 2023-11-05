@@ -205,7 +205,7 @@ public class QiniuApiServiceImpl implements QiniuApiService {
 
         //设置保存的路径
         //可以对转码后的文件进行使用saveas参数自定义命名，当然也可以不指定文件会默认命名并保存在当前空间。
-        String urlbase64 = UrlSafeBase64.encodeToString("motion1024:"+saveAddress);
+        String urlbase64 = UrlSafeBase64.encodeToString("motion-prod:"+saveAddress);
         String pfops = persistentOpf + "|saveas/" + urlbase64;
 
         //设置pipeline参数
