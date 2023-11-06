@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 @Service("likeCommentVideoService")
 public class LikeCommentVideoServiceImpl extends ServiceImpl<LikeCommentVideoMapper, LikeCommentVideo> implements LikeCommentVideoService {
 
+    /**
+     * 保存点赞信息
+     * @param likeCommentVideo
+     */
     public void saveLike(LikeCommentVideo likeCommentVideo){
         save(likeCommentVideo);
     }

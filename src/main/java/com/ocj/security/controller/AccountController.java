@@ -24,6 +24,11 @@ public class AccountController {
     @Resource
     UserService userService;
 
+    /**
+     *
+     * @param loginRequest
+     * @return
+     */
     @PostMapping("/login")
     @Transactional
     public ResponseResult login(@RequestBody LoginRequest loginRequest){
@@ -38,9 +43,12 @@ public class AccountController {
         return userService.register(registerRequest);
     }
 
+    /**
+     *
+     * @return
+     */
     @PostMapping("/logout")
     @Transactional
-    //@PreAuthorize("hasAuthority('test')")
     public ResponseResult logOut(){
         return loginService.logout();
     }

@@ -24,12 +24,24 @@ public class LikeCommentVideo  {
     @TableId
     private String id;
 
+    /**
+     * 用户id
+     */
     private String userId;
-    //喜欢的:视频id/评论id
+
+    /**
+     * 喜欢的:视频id/评论id
+     */
     private String isLiked;
 
+    /**
+     * 创建时间
+     */
     private String createAt;
 
+    /**
+     * 更新时间
+     */
     private String updateAt;
 
 

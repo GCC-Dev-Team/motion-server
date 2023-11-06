@@ -12,6 +12,10 @@ import com.ocj.security.domain.entity.LikeCommentVideo;
  */
 public interface LikeCommentVideoService extends IService<LikeCommentVideo> {
 
+    /**
+     * 保存点赞信息
+     * @param likeCommentVideo
+     */
     void saveLike(LikeCommentVideo likeCommentVideo);
 }
 

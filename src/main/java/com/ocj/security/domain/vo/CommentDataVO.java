@@ -12,8 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentDataVO implements Serializable {
 
+    /**
+     * 评论数量
+     */
     private Integer commentCount;
 
+    /**
+     * 视频下的评论集合
+     */
     private List<CommentVO> list;
 
 }

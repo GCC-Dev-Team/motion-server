@@ -11,28 +11,51 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class CommentVO implements Serializable {
 
-    //评论id
+    /**
+     * 评论id
+     */
     private String id;
     //视频id
     /*private String videoId;*/
-    //评论内容
+
+    /**
+     * 评论内容
+     */
     private String content;
-    //评论发起人id
+
+    /**
+     * 评论发起人id
+     */
     private String userId;
-    //评论者用户名
+
+    /**
+     * 评论者用户名
+     */
     private String userName;
 
-    //点赞数
+    /**
+     * 点赞数
+     */
     private Long likeCount;
 
-    //是否被该用户点赞
+    /**
+     * 是否被该用户点赞
+     */
     boolean isLiked = false;
 
-    //头像
+    /**
+     * 头像链接
+     */
     private String avatar;
 
+    /**
+     * 创建时间
+     */
     private String createAt;
 
+    /**
+     * 修改时间
+     */
     private String updateAt;
 
 }

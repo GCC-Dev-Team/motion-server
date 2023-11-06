@@ -46,10 +46,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             return;
         }
-        //表示需要登录的
-//        if (StringUtils.hasText(token)){
-//
-//        }
+
 
         //解析token,获取userId
         Claims claims = null;

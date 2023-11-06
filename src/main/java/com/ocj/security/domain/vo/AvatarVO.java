@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AvatarVO {
 
+    /**
+     * 头像链接
+     */
     private String avatar;
 
 }

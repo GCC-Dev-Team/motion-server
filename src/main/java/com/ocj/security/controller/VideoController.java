@@ -30,6 +30,9 @@ import java.util.List;
 public class VideoController {
     @Resource
     VideoService videoService;
+
+    @Resource
+    CommentService commentService;
     @PostMapping("/publish")
     @Transactional
     public ResponseResult publishVideo(MultipartFile file,String description,String categoryId,String tags ){
@@ -60,8 +63,13 @@ public class VideoController {
         return ResponseResult.okResult(videoService.getVideoDataById(videoId));
     }
 
-    @Resource
-    CommentService commentService;
+    /**
+     *
+     * @param videoId
+     * @param addCommentRequest
+     * @return
+     * @throws QiniuException
+     */
     @PostMapping("/{videoId}/comment")
     @Transactional
     public ResponseResult<AppHttpCodeEnum> addComment(@PathVariable String videoId, @RequestBody AddCommentRequest addCommentRequest) throws QiniuException {
@@ -69,6 +77,11 @@ public class VideoController {
         return ResponseResult.errorResult(appHttpCodeEnumEnum);
     }
 
+    /**
+     *
+     * @param videoId
+     * @return
+     */
     @GetMapping("/{videoId}/comment/list")
     @Transactional
     public ResponseResult<CommentDataVO> getComment(@PathVariable String videoId){
@@ -84,6 +97,11 @@ public class VideoController {
         }
     }
 
+    /**
+     *
+     * @param commentId
+     * @return
+     */
     @PostMapping ("/comment/{commentId}/like")
     @Transactional
     public ResponseResult addLikesCount(@PathVariable String commentId){

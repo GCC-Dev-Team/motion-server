@@ -15,6 +15,10 @@ public interface UserService {
      */
     ResponseResult register(@RequestBody RegisterRequest registerRequest);
 
+    /**
+     * 设置头像
+     * @param user
+     */
     void setAvatar(User user);
 
     ResponseResult userInfo();

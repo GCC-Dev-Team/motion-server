@@ -53,7 +53,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Resource
     private UserMapper userMapper;
     @Resource
+    QiniuApiService qiniuApiService;
+    @Resource
     private LikeCommentVideoService likeCommentVideoService;
+    /**
+     * 增加评论
+     */
     @Override
     public AppHttpCodeEnum addComment(String videoId, String content) throws QiniuException {
         if (!StringUtils.hasText(content)){ //如果评论内容为空
@@ -64,7 +69,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         if (trailTxt(content)){
             return AppHttpCodeEnum.CONTENT_VIOLATION;
         }
-
 
         Comment comment = Comment.builder()
                 .id(RandomUtil.generateRandomNumberString())
@@ -87,6 +91,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Resource
     private LikeCommentVideoMapper likeCommentVideoMapper;
 
+    /**
+     * 获取评论
+     * @param videoId
+     * @return
+     */
     @Override
     public List<CommentVO> getCommentList(String videoId) {
         //查询条件,获取该视频video下的评论
@@ -129,7 +138,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 commentVO.setLiked(false);
             }
         }
-
         //根据更新时间时间排序
         commentVOList.sort((o1, o2) ->
             {
@@ -141,14 +149,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                     return 0;
                 }
             }
-
         );
-
-        //redisCache.deleteObject("commentDataVO::"+videoId);
         return commentVOList;
     }
 
 
+    /**
+     * 评论点赞/取消点赞
+     * @param commentId
+     */
     @Override
     public void addLikesCount(String commentId) {
 
@@ -173,7 +182,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             temple=1;
         }
 
-
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getId,commentId);
         Comment comment = getOne(queryWrapper);
@@ -181,16 +189,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         comment.setLikeCount(likes+temple);
         updateById(comment);
 
-
-        //刷新缓存
-        //ReloadVideoCommentRedis(commentId);
         //删除缓存
         redisCache.deleteObject("commentDataVO::"+comment.getVideoId());
     }
 
-    @Resource
-    QiniuApiService qiniuApiService;
-    //七牛云文本内容审核
+    /**
+     * 七牛云文本内容审核
+     * @param content
+     * @return
+     * @throws QiniuException
+     */
     public boolean trailTxt(String content) throws QiniuException {
         String textCensor = qiniuApiService.TextCensor(content);
         log.info("七牛云返回:{}",textCensor);
@@ -219,32 +227,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     }
 
+    /**
+     * 获取评论数量
+     * @param videoId
+     * @return
+     */
     public int getCommentCount(String videoId){
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getVideoId,videoId);
         return count(queryWrapper);
 
-    }
-
-    /**
-     *
-     *  根据视频id,刷新视频下的评论缓存
-     *
-    * */
-    private void ReloadVideoCommentRedis(String commentId){
-        //根据评论id,查询对应的视频id
-        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getId,commentId);
-        Comment comment = getOne(queryWrapper);
-        String videoId = comment.getVideoId();
-
-        List<CommentVO> commentList = getCommentList(videoId);
-
-        //删除更新前的信息
-        //redisCache.deleteObject("commentVideo::"+ videoId);
-
-        //存入更新后的信息
-        redisCache.setCacheObject("commentDataVO::"+ videoId,commentList);
     }
 
     /**

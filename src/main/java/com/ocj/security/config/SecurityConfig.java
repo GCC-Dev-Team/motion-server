@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/account/login","/account/register",
                         "/video/category","/video/one","/video/list",
-                        "/video/{videoId}/comment/list","/video/next/*","/video/previous/*").permitAll()//.anonymous()
+                        "/video/{videoId}/comment/list","/video/next/*","/video/previous/*").permitAll()
                 .anyRequest().fullyAuthenticated();
 
 
@@ -79,13 +79,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-//
-//    @Bean
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    public CharacterEncodingFilter characterEncodingFilter() {
-//        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-//        filter.setEncoding("UTF-8");
-//        filter.setForceEncoding(true);
-//        return filter;
-//    }
 }

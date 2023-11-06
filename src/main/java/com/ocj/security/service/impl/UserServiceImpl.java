@@ -69,6 +69,10 @@ public class UserServiceImpl implements UserService {
         return ResponseResult.okResult("注册成功");
     }
 
+    /**
+     * 设置头像
+     * @param user
+     */
     @Override
     public void setAvatar(User user) {
         userMapper.updateById(user);

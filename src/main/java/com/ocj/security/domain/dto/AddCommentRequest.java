@@ -12,7 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class AddCommentRequest {
 
-    //评论内容
+    /**
+     * 评论内容
+     */
     private String content;
 
 }
