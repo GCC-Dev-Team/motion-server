@@ -135,14 +135,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             {
                 if (o1.getUpdateAt().compareTo(o2.getUpdateAt()) < 0) {
                     return 1;
-                }else {
+                }else if (o1.getUpdateAt().compareTo(o2.getUpdateAt()) >0 ){
                     return -1;
+                }else {
+                    return 0;
                 }
             }
 
         );
 
-        redisCache.deleteObject("commentDataVO::"+videoId);
+        //redisCache.deleteObject("commentDataVO::"+videoId);
         return commentVOList;
     }
 
