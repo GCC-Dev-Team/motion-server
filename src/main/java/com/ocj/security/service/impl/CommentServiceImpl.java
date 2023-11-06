@@ -129,6 +129,19 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 commentVO.setLiked(false);
             }
         }
+
+        //根据更新时间时间排序
+        commentVOList.sort((o1, o2) ->
+            {
+                if (o1.getUpdateAt().compareTo(o2.getUpdateAt()) < 0) {
+                    return 1;
+                }else {
+                    return -1;
+                }
+            }
+
+        );
+
         redisCache.deleteObject("commentDataVO::"+videoId);
         return commentVOList;
     }

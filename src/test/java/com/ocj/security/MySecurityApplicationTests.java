@@ -2,17 +2,7 @@ package com.ocj.security;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ocj.security.config.QinuConfig;
-import com.ocj.security.domain.dto.PublishVideoRequest;
-import com.ocj.security.domain.entity.LikeCommentVideo;
-import com.ocj.security.domain.entity.Video;
-import com.ocj.security.domain.entity.VideoCover;
-import com.ocj.security.domain.vo.CoverVO;
-import com.ocj.security.domain.vo.VideoDataVO;
-import com.ocj.security.enums.OperationEnum;
-import com.ocj.security.enums.RegexOrderEnum;
 import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
@@ -20,37 +10,15 @@ import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.VideoService;
-import com.ocj.security.utils.BeanCopyUtils;
-import com.ocj.security.utils.FileToMultipartFileConverter;
-import com.ocj.security.utils.RegexCheckStringUtil;
 import com.qiniu.common.QiniuException;
-import com.qiniu.http.Response;
-import com.qiniu.processing.OperationManager;
-import com.qiniu.processing.OperationStatus;
-import com.qiniu.storage.Configuration;
-import com.qiniu.storage.Region;
-import com.qiniu.util.Auth;
-import com.qiniu.util.StringMap;
-import com.qiniu.util.UrlSafeBase64;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @Slf4j
@@ -301,5 +269,17 @@ class MySecurityApplicationTests {
 //
 //        System.out.println(videoCovers.size());
     }
+
+    @Test
+    public void abed(){
+        String time = "2023-10-28 20:10:13";
+        String time1 = "2023-10-28 20:10:16";
+        int i = time.compareTo(time1);
+        int j = time1.compareTo(time);
+        System.out.println(i);
+        System.out.println(j);
+
+    }
+
 
 }
