@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
  * @author makejava
  * @since 2023-10-28 18:36:31
  */
-@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

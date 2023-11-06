@@ -71,13 +71,11 @@ public class VideoController {
 
     @GetMapping("/{videoId}/comment/list")
     @Transactional
-//    @Cacheable(value = "commentDataVO",key = "#videoId")
     public ResponseResult<CommentDataVO> getComment(@PathVariable String videoId){
         List<CommentVO> commentVOList = new ArrayList<>();
         try {
             //尝试获取评论
             commentVOList = commentService.getCommentList(videoId);
-
             CommentDataVO commentDataVO = new CommentDataVO(commentService.getCommentCount(videoId), commentVOList);
             return ResponseResult.okResult(commentDataVO);
         } catch (Exception e) {
