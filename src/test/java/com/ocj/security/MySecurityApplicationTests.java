@@ -3,6 +3,8 @@ package com.ocj.security;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ocj.security.config.QinuConfig;
+import com.ocj.security.domain.entity.VideoCover;
+import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
 import com.ocj.security.mapper.VideoMapper;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @SpringBootTest
 @Slf4j
@@ -272,12 +275,12 @@ class MySecurityApplicationTests {
 
     @Test
     public void abed(){
-        String time = "2023-10-28 20:10:13";
-        String time1 = "2023-10-28 20:10:16";
-        int i = time.compareTo(time1);
-        int j = time1.compareTo(time);
-        System.out.println(i);
-        System.out.println(j);
+//        String time = "2023-10-28 20:10:13";
+//        String time1 = "2023-10-28 20:10:16";
+//        int i = time.compareTo(time1);
+//        int j = time1.compareTo(time);
+//        System.out.println(i);
+//        System.out.println(j);
 
     }
 

@@ -33,6 +33,15 @@ public class VideoController {
 
     @Resource
     CommentService commentService;
+
+    /**
+     * 发布视频
+     * 开发未完成（98%进度）
+     * @param file 文件
+     * @param description 视频描述
+     * @param categoryId 分类id
+     * @param tags 标签
+     */
     @PostMapping("/publish")
     @Transactional
     public ResponseResult publishVideo(MultipartFile file,String description,String categoryId,String tags ){
@@ -42,7 +51,15 @@ public class VideoController {
     }
 
 
-
+    /**
+     * 获取视频列表
+     * @param currentPage 分页当前页（必填）
+     * @param pageSize 分页每页大小（必填）
+     * @param search 搜索关键字
+     * @param categoryId 类型id筛选
+     * @param tag 标签筛选
+     * @return
+     */
     @Transactional
     @GetMapping(value = "/list",produces = "application/json; charset=utf-8")
     public ResponseResult getVideoList(@RequestParam("currentPage") Integer currentPage, @RequestParam("pageSize") Integer pageSize, String search, String categoryId, String [] tag){
@@ -64,7 +81,7 @@ public class VideoController {
     }
 
     /**
-     *
+     *增加评论
      * @param videoId
      * @param addCommentRequest
      * @return
@@ -78,7 +95,7 @@ public class VideoController {
     }
 
     /**
-     *
+     *获取评论
      * @param videoId
      * @return
      */
@@ -98,8 +115,8 @@ public class VideoController {
     }
 
     /**
-     *
-     * @param commentId
+     *点赞评论
+     * @param commentId 评论id
      * @return
      */
     @PostMapping ("/comment/{commentId}/like")

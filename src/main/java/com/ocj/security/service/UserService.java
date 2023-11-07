@@ -11,7 +11,7 @@ public interface UserService {
     /**
      * 注册用户
      * @param registerRequest
-     * @return
+     * @return 注册成功
      */
     ResponseResult register(@RequestBody RegisterRequest registerRequest);
 

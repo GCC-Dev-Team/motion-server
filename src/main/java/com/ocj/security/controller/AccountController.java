@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * 账号相关接口
+ */
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -25,9 +28,8 @@ public class AccountController {
     UserService userService;
 
     /**
-     *
+     *登录
      * @param loginRequest
-     * @return
      */
     @PostMapping("/login")
     @Transactional
@@ -36,6 +38,11 @@ public class AccountController {
         return loginService.login(loginRequest);
     }
 
+    /**
+     * 注册
+     * @param registerRequest 注册需要的请求体参数
+     * @return string
+     */
     @Transactional
     @PostMapping("/register")
     public ResponseResult register(@RequestBody RegisterRequest registerRequest){
@@ -44,8 +51,7 @@ public class AccountController {
     }
 
     /**
-     *
-     * @return
+     *退出登录
      */
     @PostMapping("/logout")
     @Transactional

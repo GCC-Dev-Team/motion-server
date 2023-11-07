@@ -6,6 +6,7 @@ import com.ocj.security.domain.dto.RegisterRequest;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.UserInfoDataVO;
 import com.ocj.security.domain.vo.UserInfoVO;
+import com.ocj.security.enums.AppHttpCodeEnum;
 import com.ocj.security.mapper.UserMapper;
 import com.ocj.security.service.UserService;
 import com.ocj.security.utils.RegexCheckStringUtil;
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
 
         //返回注册成功的消息
-        return ResponseResult.okResult("注册成功");
+        return ResponseResult.okResult(AppHttpCodeEnum.REGISER_ACCOUNT.getMsg());
     }
 
     /**

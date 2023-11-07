@@ -27,7 +27,9 @@ public enum AppHttpCodeEnum {
 
     NICKNAME_EXIST(512, "昵称已存在"),
 
-    CONTENT_VIOLATION(513,"内容违规,不予发送");
+    CONTENT_VIOLATION(513,"内容违规,不予发送"),
+
+    REGISER_ACCOUNT(200,"注册成功");
 
 
 

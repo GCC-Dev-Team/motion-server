@@ -34,7 +34,7 @@ public class UserController {
     private RedisCache redisCache;
 
     /**
-     *
+     *上传头像
      * @param file
      * @return
      */
@@ -59,7 +59,6 @@ public class UserController {
 
     /**
      * 获取用户信息
-     * @return
      */
     @GetMapping("/info")
     @Transactional
