@@ -7,13 +7,13 @@ Motion 短视频 web后端
 ## Getting Started
 
 前置要求：
-本机安装了jdk8或更高版本
+本机安装了 jdk8 或更高版本
 如何运行程序：
 
-1. 首先如果不使用本地的数据库的sql，直接启动dev环境就可以,
-2. 如果是想使用本地的sql 请使用sql文件夹的sql文件，导入到数据库并更改application.yaml 文件的配置
-  - redis地址
-  - mysql地址
+1. 首先如果不使用本地的数据库的 sql，直接启动dev环境就可以,
+2. 如果是想使用本地的 sql 请使用 sql 文件夹的 sql 文件，导入到数据库并更改 application.yaml 文件的配置
+  - redis 地址
+  - mysql 地址
 
 
 
