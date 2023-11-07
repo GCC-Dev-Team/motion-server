@@ -25,7 +25,6 @@ import java.util.List;
 
 @SpringBootTest
 @Slf4j
-
 class MySecurityApplicationTests {
 
     @Resource
@@ -36,35 +35,33 @@ class MySecurityApplicationTests {
     QiniuApiService qiniuApiService;
 
     @Test
-
-    public void uploadFile(MultipartFile file,String fileAddress){
+    void uploadFile(MultipartFile file, String fileAddress) {
         fileAddress = "avatar";
-        String fileAddr = qiniuApiService.uploadFile(file,fileAddress);
+        String fileAddr = qiniuApiService.uploadFile(file, fileAddress);
     }
 
 
     @Test
-    public  void test() throws QiniuException {
-        String textCensor = qiniuApiService.TextCensor("asdafsffafafa");
-        log.info("七牛云返回:{}",textCensor);
-        JSONObject jsonObject = JSON.parseObject(textCensor);
-
-        //处理建议:pass-通过,block-建议删除
-        String suggestion = jsonObject.getJSONObject("result")
-                .getJSONObject("scenes")
-                .getJSONObject("antispam")
-                .getString("suggestion");
-
-
-        String label = jsonObject.getJSONObject("result")
-                .getJSONObject("scenes")
-                .getJSONObject("antispam")
-                .getJSONArray("details").getJSONObject(0).getString("label");
-
-        System.out.println("Suggestion: " + suggestion);
-        System.out.println("label:" + label);
+    void test() throws QiniuException {
+//        String textCensor = qiniuApiService.TextCensor("asdafsffafafa");
+//        log.info("七牛云返回:{}",textCensor);
+//        JSONObject jsonObject = JSON.parseObject(textCensor);
+//
+//        //处理建议:pass-通过,block-建议删除
+//        String suggestion = jsonObject.getJSONObject("result")
+//                .getJSONObject("scenes")
+//                .getJSONObject("antispam")
+//                .getString("suggestion");
+//
+//
+//        String label = jsonObject.getJSONObject("result")
+//                .getJSONObject("scenes")
+//                .getJSONObject("antispam")
+//                .getJSONArray("details").getJSONObject(0).getString("label");
+//
+//        System.out.println("Suggestion: " + suggestion);
+//        System.out.println("label:" + label);
     }
-
 
 
 //    @Test
@@ -121,7 +118,7 @@ class MySecurityApplicationTests {
     VideoCoverMapper videoCoverMapper;
 
     @Test
-    void updateData(){
+    void updateData() {
 //
 //        List<Video> videos = videoMapper.selectList(null);
 //
@@ -150,7 +147,7 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    void testPageLikeVideo(){
+    void testPageLikeVideo() {
 //        Page<Video> objectPage = new Page<>(1, 10);
 //
 //       String videoName="测试";
@@ -166,8 +163,9 @@ class MySecurityApplicationTests {
 //        long total = videoPage.getTotal();
 //        System.out.println(total);
     }
+
     @Test
-    void testFile(){
+    void testFile() {
 //        String url="http://s36fh9xu3.hn-bkt.clouddn.com/videoCover/cecf27b09a594777.jpg";
 //        System.out.println(fileService.urlGetPhotoImage(url).toString());
 //
@@ -189,8 +187,9 @@ class MySecurityApplicationTests {
     CommentService commentService;
     @Resource
     LikeCommentVideoMapper likeCommentVideoMapper;
+
     @Test
-    public void enco() throws UnsupportedEncodingException {
+    void enco() throws UnsupportedEncodingException {
 //        // 参数一：要编码的字符串 参数二：指定字符集
 //        String data="美女";
 //        System.out.println(URLEncoder.encode(data, "utf-8"));
@@ -213,13 +212,13 @@ class MySecurityApplicationTests {
 //        System.out.println(check);
         //System.out.println(commentService.getCommentCount("video01f9f89c030a41b9"));
 
-       // System.out.println(videoService.getVideoDataById("video01f9f89c030a41b9").toString());
+        // System.out.println(videoService.getVideoDataById("video01f9f89c030a41b9").toString());
 //        QueryWrapper<LikeCommentVideo> wrapper = new QueryWrapper<LikeCommentVideo>().eq("user_id", "3413c310-f4ae-43fd65").eq("is_liked", "5774798523901742");
 //        System.out.println(likeCommentVideoMapper.selectOne(wrapper));
 //        String clickLike="null";
 //        System.out.println(StringUtils.hasText(clickLike));
 
-       // System.out.println(likeCommentVideoMapper.isLiked("b2218631-d51f-4c28-a575-941fba921b0b", "6222401340071668"));
+        // System.out.println(likeCommentVideoMapper.isLiked("b2218631-d51f-4c28-a575-941fba921b0b", "6222401340071668"));
     }
 
     @Test
@@ -258,7 +257,7 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    void Update(){
+    void Update() {
 //        List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
 //
 //        for (VideoCover videoCover:videoCovers){
@@ -274,7 +273,7 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    public void abed(){
+    void abed() {
 //        String time = "2023-10-28 20:10:13";
 //        String time1 = "2023-10-28 20:10:16";
 //        int i = time.compareTo(time1);
