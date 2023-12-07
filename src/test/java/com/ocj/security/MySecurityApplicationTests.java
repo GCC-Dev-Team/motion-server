@@ -1,9 +1,7 @@
 package com.ocj.security;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ocj.security.config.QinuConfig;
-import com.ocj.security.domain.entity.VideoCover;
+import com.ocj.security.domain.dto.PublishVideoRequest;
 import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.mapper.LikeCommentVideoMapper;
 import com.ocj.security.mapper.VideoCoverMapper;
@@ -12,15 +10,25 @@ import com.ocj.security.service.CommentService;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.VideoService;
+import com.ocj.security.utils.FileToMultipartFileConverter;
+import com.ocj.security.utils.FileUtil;
+import com.ocj.security.utils.VideoCoverUtils;
 import com.qiniu.common.QiniuException;
+import com.qiniu.http.Response;
+import com.qiniu.sms.SmsManager;
+import com.qiniu.util.Auth;
 import lombok.extern.slf4j.Slf4j;
+import org.jcodec.api.JCodecException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -34,10 +42,53 @@ class MySecurityApplicationTests {
     @Resource
     QiniuApiService qiniuApiService;
 
+
+
+    @Test
+    void testCoverVideo() throws IOException {
+
+//        String folderPath = "D:\\test"; // 指定文件夹路径
+//
+//        File folder = new File(folderPath);
+//
+//        if (folder.isDirectory()) {
+//            File[] files = folder.listFiles();
+//
+//            if (files != null) {
+//                List<MultipartFile> multipartFiles = new ArrayList<>();
+//
+//                for (File file : files) {
+//                    try {
+//                        MultipartFile multipartFile = FileToMultipartFileConverter.convertFileToMultipartFile(file);
+//                        multipartFiles.add(multipartFile);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                // 现在您可以使用multipartFiles进行后续操作
+//                for (int i = 0; i < multipartFiles.size(); i++) {
+//                    File file = FileUtil.MultipartFileToFile(multipartFiles.get(i));
+//
+//
+//                    FileUtil.FileDelete(file);
+//                    //  MultipartFile cover = VideoCoverUtils.fetchFrame(multipartFiles.get(i));
+////                    MultipartFile multipartFile = FileToMultipartFileConverter.convertFileToMultipartFile(cover);
+//
+////                    fileService.uploadFile(multipartFile,"cover","test");
+//                }
+//            } else {
+//                System.err.println("No files found in the specified folder.");
+//            }
+//        } else {
+//            System.err.println("The specified path is not a folder.");
+//        }
+    }
+
     @Test
     void uploadFile(MultipartFile file, String fileAddress) {
-        fileAddress = "avatar";
-        String fileAddr = qiniuApiService.uploadFile(file, fileAddress);
+//        fileAddress = "avatar";
+//        String fileAddr = qiniuApiService.uploadFile(file, fileAddress);
     }
 
 
@@ -222,58 +273,61 @@ class MySecurityApplicationTests {
     }
 
     @Test
-    void testFi() throws IOException {
-//        // 指定文件夹路径
-//        String folderPath = "D://抖音视频/私密";
-//
-//        // 创建 File 对象
-//        File folder = new File(folderPath);
-//
-//        // 检查文件夹是否存在
-//        if (folder.exists() && folder.isDirectory()) {
-//            // 获取文件夹中的所有文件
-//            File[] files = folder.listFiles();
-//
-//            // 遍历文件列表并获取文件名
-//            for (File file : files) {
-//                if (file.isFile()) {
-//                    String fileName = file.getName();
-//                    // 去掉文件名末尾的 .mp4
-//                    if (fileName.endsWith(".mp4")) {
-//                        fileName = fileName.substring(0, fileName.length() - 4);
-//                    }
-//                    System.out.println("文件名: " + fileName);
-//
-//                    MultipartFile multipartFile = FileToMultipartFileConverter.convertFileToMultipartFile(file);
-//
-//                    videoService.publishVideo(multipartFile,new PublishVideoRequest(fileName,"2","#喜欢"));
-//                }
-//            }
-//        } else {
-//            System.err.println("指定的路径不是一个有效的文件夹。");
-//        }
+    void testFi() throws IOException, JCodecException {
+        // 指定文件夹路径  "D://抖音视频/私密";
+        String folderPath = "D://test";
+
+        // 创建 File 对象
+        File folder = new File(folderPath);
+
+        // 检查文件夹是否存在
+        if (folder.exists() && folder.isDirectory()) {
+            // 获取文件夹中的所有文件
+            File[] files = folder.listFiles();
+
+            // 遍历文件列表并获取文件名
+            for (File file : files) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    // 去掉文件名末尾的 .mp4
+                    if (fileName.endsWith(".mp4")) {
+                        fileName = fileName.substring(0, fileName.length() - 4);
+                    }
+                    //System.out.println("文件名: " + fileName);
+
+                    MultipartFile multipartFile = FileToMultipartFileConverter.convertFileToMultipartFile(file);
+
+                    File fili = FileUtil.MultipartFileToFile(multipartFile);
+
+                    MultipartFile multipartCoverFile = VideoCoverUtils.getThumbnail(file,new CoverVO());
+
+                    System.out.println(multipartCoverFile.getName());
+                    videoService.publishVideo(multipartFile,new PublishVideoRequest(fileName,"2","#喜欢"));
+                }
+            }
+        } else {
+            System.err.println("指定的路径不是一个有效的文件夹。");
+        }
 
 
     }
 
     @Test
     void Update() {
-//        List<VideoCover> videoCovers = videoCoverMapper.selectList(null);
 //
-//        for (VideoCover videoCover:videoCovers){
-//            CoverVO coverVO = fileService.urlGetPhotoImage(videoCover.getVideoCoverUrl());
+//        File file = FileUtil.MultipartFileToFile(videoFile);
 //
-//            videoCover.setHeight(coverVO.getHeight());
-//            videoCover.setWidth(coverVO.getWidth());
-//
-//             videoCoverMapper.updateById(videoCover);
-//        }
-//
-//        System.out.println(videoCovers.size());
+//        MultipartFile multipartCoverFile = getThumbnail(file,coverVO);
     }
 
+    @Resource
+    Auth auth;
     @Test
-    void abed() {
+    void abed() throws QiniuException {
+        SmsManager smsManager = new SmsManager(auth);
+
+        Response response = smsManager.sendMessage("1316", new String[]{"19835930193"}, new HashMap<>(12, 2));
+        System.out.println(response);
 //        String time = "2023-10-28 20:10:13";
 //        String time1 = "2023-10-28 20:10:16";
 //        int i = time.compareTo(time1);

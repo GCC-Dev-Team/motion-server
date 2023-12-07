@@ -23,3 +23,10 @@ quin:
   secretKey: "Zm2fQUO3zMIH7R8psNby8oCqywT8QshxcXjNc54A"
   bucket: "motion1024"
   domain: "s36fh9xu3.hn-bkt.clouddn.com"
+
+#minio的
+
+oss:
+  endpoint: https://guangxiaoqing.com:9000
+  access-key: XNQOMIJA60VZCA76WLMW
+  secret-key: 8dfi1yHcvo7OI5MOgtM+OPwQGNwfuzRaFEhiWdGj

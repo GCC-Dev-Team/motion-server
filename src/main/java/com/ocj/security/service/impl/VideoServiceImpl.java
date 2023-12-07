@@ -3,6 +3,7 @@ package com.ocj.security.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ocj.security.commom.ResponseResult;
+import com.ocj.security.config.MinIoClientConfig;
 import com.ocj.security.config.QinuConfig;
 import com.ocj.security.domain.entity.Page;
 import com.ocj.security.domain.dto.PublishVideoRequest;
@@ -21,6 +22,7 @@ import com.ocj.security.mapper.VideoMapper;
 import com.ocj.security.utils.RandomUtil;
 import com.ocj.security.utils.RegexCheckStringUtil;
 import com.ocj.security.utils.SecurityUtils;
+import com.ocj.security.utils.VideoCoverUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +59,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     @Resource
     VideoCoverMapper videoCoverMapper;
     @Resource
-    QinuConfig qinuConfig;
+    VideoCoverUtils videoCoverUtils;
+
+    @Resource
+    MinIoClientConfig minIoClientConfig;
 
 
     @Transactional
@@ -69,14 +74,15 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         if (!RegexCheckStringUtil.checkStringLength(description, 3, 80)) {
             return ResponseResult.errorResult(AppHttpCodeEnum.SYSTEM_ERROR, "描述字符超出80");
         }
-        User user = SecurityUtils.getLoginUser().getUser();
+        //User user = SecurityUtils.getLoginUser().getUser();
 
         Video video = new Video();
         String videoId = RandomUtil.generateRandomString(16);
         video.setVideoId(videoId);
         video.setTags(tags);
-        String domain = qinuConfig.getDomain();
-        String fileUrl = fileService.uploadFile(file, "video/" + videoId);
+
+        String domain= minIoClientConfig.getUrl();
+        String fileUrl = fileService.uploadFile(file,"raw",videoId);
         video.setUrl(fileUrl);
         video.setAddress(fileUrl.substring(domain.length() + 1));
         video.setStatus(1);
@@ -84,34 +90,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         video.setLikeCount(0L);
         video.setDescription(description);
         video.setCategoryId(publishVideoRequest.getCategoryId());
-        video.setPublisher(user.getId());
+        video.setPublisher("b2218631-d51f-4c28-a575-941fba921b0b");
 
-        Boolean processFile = fileService.processFile(video.getAddress(), OperationEnum.Video_Screenshot.getOperationOrder(), "videoCover/" + videoId + ".jpg");
 
-        if (processFile.equals(Boolean.FALSE)) {
-            return ResponseResult.errorResult(500, "视频截图处理失败!");
-        }
-        VideoCover videoCover = new VideoCover();
-        videoCover.setVideoId(videoId);
-        videoCover.setCoverAddress("videoCover/" + videoId + ".jpg");
-        videoCover.setVideoCoverUrl(domain + "/" + videoCover.getCoverAddress());
-        //这个是视频
-        String videoCoverUrl = videoCover.getVideoCoverUrl();
-
-        //TODO 优化，这个要睡觉，不行
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        CoverVO coverVO = fileService.urlGetPhotoImage(videoCoverUrl);
-
-        videoCover.setWidth(coverVO.getWidth());
-        videoCover.setHeight(coverVO.getHeight());
-//
-//
-//        videoMapper.insert(video);
-//        videoCoverMapper.insert(videoCover);
+        VideoCover videoCover = videoCoverUtils.fetchFrame(file, videoId);
+        videoMapper.insert(video);
+        videoCoverMapper.insert(videoCover);
 
         return ResponseResult.okResult(video.getUrl());
     }

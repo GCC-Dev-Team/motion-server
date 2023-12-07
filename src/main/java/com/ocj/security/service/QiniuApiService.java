@@ -8,6 +8,7 @@ public interface QiniuApiService {
      * @param text
      * @return
      * @throws QiniuException
+     * 已经弃用
      */
     String TextCensor(String text)throws QiniuException;
 
@@ -34,6 +35,7 @@ public interface QiniuApiService {
      * @param file 文件
      * @param fileAddress 文件的地址，需要目录记得携带目录
      * @return
+     * * 以及弃用
      */
     String uploadFile(MultipartFile file, String fileAddress);
 
@@ -41,6 +43,7 @@ public interface QiniuApiService {
      * 展示图片的接口（提供地址就行）注意这个有目录记得加上去
      * @param fileAddress
      * @return
+     * 以及弃用
      */
     String preview(String fileAddress);
 

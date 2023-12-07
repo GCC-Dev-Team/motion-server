@@ -5,6 +5,7 @@ import com.ocj.security.commom.ResponseResult;
 import com.ocj.security.domain.entity.LoginUser;
 import com.ocj.security.domain.entity.User;
 import com.ocj.security.domain.vo.AvatarVO;
+import com.ocj.security.service.FileService;
 import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.service.UserService;
 import com.ocj.security.utils.RedisCache;
@@ -32,6 +33,8 @@ public class UserController {
 
     @Resource
     private RedisCache redisCache;
+    @Resource
+    FileService fileService;
 
     /**
      *上传头像
@@ -44,7 +47,7 @@ public class UserController {
         //获取原始文件名
         String originalFilename = file.getOriginalFilename();
         log.info("文件名:{}",originalFilename);
-        String avatarURL = qiniuApiService.uploadFile(file, "avatar/"+originalFilename);
+        String avatarURL = fileService.uploadFile(file,"avatar",originalFilename);
 
         //获取用户个人信息,修改头像
         User user = SecurityUtils.getLoginUser().getUser();

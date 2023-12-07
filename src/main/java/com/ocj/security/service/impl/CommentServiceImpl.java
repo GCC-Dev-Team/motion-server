@@ -66,9 +66,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         }
 
         //如果违规,返回true
-        if (trailTxt(content)){
-            return AppHttpCodeEnum.CONTENT_VIOLATION;
-        }
+//        if (trailTxt(content)){
+//            return AppHttpCodeEnum.CONTENT_VIOLATION;
+//        }
 
         Comment comment = Comment.builder()
                 .id(RandomUtil.generateRandomNumberString())

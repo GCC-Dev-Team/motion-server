@@ -6,6 +6,7 @@ import com.ocj.security.domain.vo.CoverVO;
 import com.ocj.security.service.FileService;
 import com.ocj.security.service.QiniuApiService;
 import com.ocj.security.utils.FileUtil;
+import com.ocj.security.utils.MinioUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import com.qiniu.processing.OperationManager;
@@ -34,6 +35,8 @@ import java.net.URL;
 public class FileServiceImpl implements FileService {
     @Resource
     QiniuApiService qiniuApiService;
+    @Resource
+    MinioUtil minioUtil;
     private static final Logger log = LoggerFactory.getLogger(FileServiceImpl.class);
 
 
@@ -41,17 +44,30 @@ public class FileServiceImpl implements FileService {
      * 上传文件的接口
      *
      * @param file
-     * @param fileAddress 文件的路径，但是注意的是，如果是前面有文件夹，要在加入/
+     * @param fileName 文件的路径，但是注意的是，如果是前面有文件夹，要在加入/
+     * @return
+     * 改成minio以后已经弃用
+     */
+
+//    public String uploadFile(MultipartFile file, String fileName) {
+//        return qiniuApiService.uploadFile(file, fileName);
+//    }
+
+    /**
+     * 返回的是正式的地址
+     * @param file
+     * @param prefix
+     * @param fileName 文件的路径，但是注意的是，如果是前面有文件夹，要在加入/
      * @return
      */
     @Override
-    public String uploadFile(MultipartFile file, String fileAddress) {
-        return qiniuApiService.uploadFile(file, fileAddress);
+    public String uploadFile(MultipartFile file, String prefix,String fileName) {
+        return minioUtil.upload(file,prefix,fileName);
     }
 
     @Override
     public String preview(String fileAddress) {
-        return qiniuApiService.preview(fileAddress);
+        return minioUtil.preview(fileAddress);
     }
 
 
