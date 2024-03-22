@@ -7,6 +7,6 @@ import java.util.List;
 @Mapper
 public interface MenuMapper {
 
-    List<String> selectPermsByUserId(Long userid);
+
 
 }

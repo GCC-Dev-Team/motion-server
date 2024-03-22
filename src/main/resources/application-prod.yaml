@@ -27,6 +27,6 @@ quin:
 #minio的
 
 oss:
-  endpoint: https://guangxiaoqing.com:9000
-  access-key: XNQOMIJA60VZCA76WLMW
-  secret-key: 8dfi1yHcvo7OI5MOgtM+OPwQGNwfuzRaFEhiWdGj
+  endpoint: http://114.132.67.226:9000
+  access-key: minio
+  secret-key: minio123
