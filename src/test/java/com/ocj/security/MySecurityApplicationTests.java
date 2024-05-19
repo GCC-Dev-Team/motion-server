@@ -173,9 +173,16 @@ class MySecurityApplicationTests {
 
     @Test
     void updateData() {
-        String s1="http://114.132.67.226:9000/video/";
+        String s1="http://yun.xiaoli.chat/";
 //
 //        List<Video> videos = videoMapper.selectList(null);
+//
+//        for (Video video :videos){
+//
+//            video.setUrl(s1+video.getAddress().substring(6));
+//
+//            videoMapper.updateById(video);
+//        }
 //        System.out.println(videos.size());
 ////
 //        for (Video video:videos){

@@ -11,23 +11,19 @@ spring:
     password: abC123456@
     database: 2
 
-
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 20MB
-
-
-
 server:
-  port: 8060
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
+
+##七牛云的
 quin:
+  ## 七牛云的AK SK 和桶名称
   accessKey: "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT"
   secretKey: "Zm2fQUO3zMIH7R8psNby8oCqywT8QshxcXjNc54A"
   bucket: "motion-prod"
-  domain: "http://s3nhl406l.hn-bkt.clouddn.com"
+  ##域名配置
+  domain: "http://yun.xiaoli.chat"
 
 #minio的
 

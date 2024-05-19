@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/motion?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: xiaoli
+    password: abC123456@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    host: localhost
+    port: 6379
+    password: abC123456@
+    database: 2
+
+
+server:
+  port: 8060
+  tomcat:
+    uri-encoding: UTF-8
+
+
+##七牛云的配置
+quin:
+  ## 七牛云的AK SK 和桶名称
+  accessKey: "MAh90OZvgbaAY6m5g8DhtNC5s7TtFomeGHu2pCrT"
+  secretKey: "Zm2fQUO3zMIH7R8psNby8oCqywT8QshxcXjNc54A"
+  bucket: "motion-prod"
+  ##域名配置
+  domain: "http://yun.xiaoli.chat"
+
+#minio的
+
+oss:
+  endpoint: http://114.132.67.226:9000
+  access-key: minio
+  secret-key: minio123
