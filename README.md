@@ -6,6 +6,10 @@
  [点击查看演示视频](https://nanfangshaonian.feishu.cn/file/VTfDbgp2goPulgxvIF0c31eUnnb)
 
 [点击在线体验](http://GCC.xiaoli.chat)
+
+**程序获的"七牛云校园编程马拉松"创作奖** 
+- 活动地址:https://www.qiniu.com/activity/detail/651297ed0d50912d3d53307b 
+- 队伍信息:潜龙勿用队 
 ## 项目亮点
 
 1. **安全性保障**：
