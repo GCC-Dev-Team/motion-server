@@ -162,7 +162,7 @@
 
 3. **运行镜像**:
    1. 创建共享网络: `docker network create evn_net`
-   2. 运行环境镜像 : `docker run -d --network=evn_net -p 3306:3306 -p 6379:6379 -p 27017:27017 -p 9000:9000 --name evn evn:latest`
+   2. 运行环境镜像 : `docker run -d --network=evn_net -p 3306:3306 -p 6379:6379  -p 9000:9000 --name evn evn:latest`
    3. 运行程序镜像: `docker run -d -p 443:443 --network=evn_net --name run run:latest`
 
 ![img_5.png](img_5.png)
