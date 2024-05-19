@@ -149,16 +149,15 @@
 
 1. **构建环境镜像**:
     1. 进入doc/docker/evn 文件夹
-    2. 执行`docker build -t evn:latest .`命令构建环境镜像,此镜像包含JDK 20, MySQL 8.0.34, Redis 7.0.8, MongoDB 7.0, Minio 2022-04-16T04-26-02Z
+    2. 执行`docker build -t evn:latest .`命令构建环境镜像,此镜像包含JDK 20, MySQL 8.0.34, Redis 7.0.8, Minio 2022-04-16T04-26-02Z
 
 2. **构建程序镜像**:
-    1. 如果域名回调地址不变情况下: 进入doc/docker/run 文件夹 执行`docker build -t run:latest .`命令构建程序镜像
 
-    2. 如果域名回调地址改变情况下:
-        1. 修改 **application.yml** 文件中的回调地址,将域名换成你的域名,并确保选择环境 active docker
-        2. 执行`mvn -U clean package -Dmaven.test.skip=true`命令打包
-        3. 将jar放入doc/docker/run 文件夹下(确保jar名称为 docker_local_https.jar)
-
+   1. 修改 **application.yml** 文件中的相关配置,并确保选择环境 active docker
+   2. 执行`mvn -U clean package -Dmaven.test.skip=true`命令打包
+   3. 将jar放入doc/docker/run 文件夹下(确保jar名称为 docker_local_https.jar)
+   
+   4. 进入doc/docker/run 文件夹 执行`docker build -t run:latest .`命令构建程序镜像
 
 3. **运行镜像**:
    1. 创建共享网络: `docker network create evn_net`
